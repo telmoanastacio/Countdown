@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 
-import com.tsilva.countdown.Activities.MainActivity;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -18,20 +16,24 @@ import java.util.concurrent.TimeUnit;
 public final class ImageProcessingService
 {
     private Context context = null;
+    private PersistenceService persistenceService = null;
 
     private ImageProcessingService() {}
 
-    private ImageProcessingService(Context context)
+    private ImageProcessingService(Context context, PersistenceService persistenceService)
     {
         this.context = context;
+        this.persistenceService = persistenceService;
     }
 
-    public static ImageProcessingService imageProcessingServiceInstance(Context context)
+    public static ImageProcessingService imageProcessingServiceInstance
+            (Context context,
+             PersistenceService persistenceService)
     {
-        return new ImageProcessingService(context);
+        return new ImageProcessingService(context, persistenceService);
     }
 
-    public List<Bitmap> constantFrameRateBuildList(Uri uri, long stepMillis)
+    public void constantFrameRateBuildCache(Uri uri, long stepMillis)
     {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(context, uri);
@@ -39,6 +41,7 @@ public final class ImageProcessingService
                 .extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         long millis = Long.valueOf(METADATA_KEY_DURATION);
 
+        int position = 0;
         List<Bitmap> bitmapList = new LinkedList<>();
         for(long i = 0; i <= millis; i = i + stepMillis)
         {
@@ -50,6 +53,8 @@ public final class ImageProcessingService
                 if(bitmapList.isEmpty())
                 {
                     bitmapList.add(bitmap);
+                    persistenceService.saveImage(bitmap, "" + position);
+                    position++;
                 }
                 else
                 {
@@ -61,11 +66,11 @@ public final class ImageProcessingService
                     else
                     {
                         bitmapList.add(bitmap);
+                        persistenceService.saveImage(bitmap, "" + position);
+                        position++;
                     }
                 }
             }
         }
-
-        return bitmapList;
     }
 }

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,8 +11,7 @@ import com.tsilva.countdown.CountdownApp;
 import com.tsilva.countdown.R;
 import com.tsilva.countdown.Services.ImageProcessingService;
 import com.tsilva.countdown.Services.PermissionsService;
-
-import java.util.List;
+import com.tsilva.countdown.Services.PersistenceService;
 
 import javax.inject.Inject;
 
@@ -22,7 +20,13 @@ public final class MainActivity extends AppCompatActivity
     private static MainActivity mainActivity = null;
 
     @Inject
+    Context context;
+
+    @Inject
     PermissionsService permissionsService;
+
+    @Inject
+    PersistenceService persistenceService;
 
     @Inject
     ImageProcessingService imageProcessingService;
@@ -38,7 +42,8 @@ public final class MainActivity extends AppCompatActivity
 
         Uri uri = Uri.parse("android.resource://" + MainActivity.getMainContext()
                 .getPackageName() + "/" + R.raw.moon);
-        List<Bitmap> bitmapList = imageProcessingService.constantFrameRateBuildList(uri, 100L);
+        persistenceService.loadCachedImages();
+        imageProcessingService.constantFrameRateBuildCache(uri, 100L);
         System.out.println();
     }
 

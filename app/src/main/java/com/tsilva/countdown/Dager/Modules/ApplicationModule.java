@@ -41,15 +41,17 @@ public final class ApplicationModule
     }
 
     @Provides
-    public ImageProcessingService provideImageProcessingService(Context context)
-    {
-        return ImageProcessingService.imageProcessingServiceInstance(context);
-    }
-
-    @Provides
     public PersistenceService providePersistenceService(Context context)
     {
         return PersistenceService.persistenceServiceInstance(context);
+    }
+
+    @Provides
+    public ImageProcessingService provideImageProcessingService
+            (Context context,
+             PersistenceService persistenceService)
+    {
+        return ImageProcessingService.imageProcessingServiceInstance(context, persistenceService);
     }
 
     @Provides
