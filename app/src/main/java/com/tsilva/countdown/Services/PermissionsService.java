@@ -15,7 +15,6 @@ import com.tsilva.countdown.Activities.MainActivity;
 
 public final class PermissionsService
 {
-    private static PermissionsService permissionsServiceInstance = null;
     public static final int READ_EXTERNAL_STORAGE_CODE = 9010;
     public static final int WRITE_EXTERNAL_STORAGE_CODE = 9011;
 
@@ -30,12 +29,7 @@ public final class PermissionsService
 
     public static PermissionsService permissionsServiceInstance(Context context)
     {
-        if(permissionsServiceInstance == null)
-        {
-            permissionsServiceInstance = new PermissionsService(context);
-        }
-
-        return permissionsServiceInstance;
+        return new PermissionsService(context);
     }
 
     public void getPermissions()

@@ -9,7 +9,7 @@ import com.tsilva.countdown.Dager.Components.ApplicationGraph;
  * Created by Telmo Silva on 04.12.2019.
  */
 
-public class CountdownApp extends Application
+public final class CountdownApp extends Application
 {
     public static CountdownApp instance;
     public static ApplicationGraph applicationComponent;

@@ -1,5 +1,6 @@
 package com.tsilva.countdown.Services;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -14,12 +15,26 @@ import java.util.concurrent.TimeUnit;
  * Created by Telmo Silva on 04.12.2019.
  */
 
-public class ImageProcessingService
+public final class ImageProcessingService
 {
+    private Context context = null;
+
+    private ImageProcessingService() {}
+
+    private ImageProcessingService(Context context)
+    {
+        this.context = context;
+    }
+
+    public static ImageProcessingService imageProcessingServiceInstance(Context context)
+    {
+        return new ImageProcessingService(context);
+    }
+
     public List<Bitmap> constantFrameRateBuildList(Uri uri, long stepMillis)
     {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-        mediaMetadataRetriever.setDataSource(MainActivity.getMainContext(), uri);
+        mediaMetadataRetriever.setDataSource(context, uri);
         String METADATA_KEY_DURATION = mediaMetadataRetriever
                 .extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         long millis = Long.valueOf(METADATA_KEY_DURATION);

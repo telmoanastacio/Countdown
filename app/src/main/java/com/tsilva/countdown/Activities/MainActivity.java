@@ -17,12 +17,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity
+public final class MainActivity extends AppCompatActivity
 {
     private static MainActivity mainActivity = null;
 
     @Inject
     PermissionsService permissionsService;
+
+    @Inject
+    ImageProcessingService imageProcessingService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity
 
         Uri uri = Uri.parse("android.resource://" + MainActivity.getMainContext()
                 .getPackageName() + "/" + R.raw.moon);
-        List<Bitmap> bitmapList = new ImageProcessingService().constantFrameRateBuildList(uri, 100L);
+        List<Bitmap> bitmapList = imageProcessingService.constantFrameRateBuildList(uri, 100L);
         System.out.println();
     }
 
