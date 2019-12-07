@@ -1,5 +1,6 @@
 package com.tsilva.countdown.Dager.Modules;
 
+import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientEmailVerification;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.Api.RestClient.FirebaseAuthApiClient;
@@ -19,6 +20,13 @@ public final class ApiModule
             FirebaseAuthApiClient firebaseAuthApiClient)
     {
         return new PostFirebaseAuthApiClientSignUp(firebaseAuthApiClient);
+    }
+
+    @Provides
+    public PostFirebaseAuthApiClientEmailVerification
+    providePostFirebaseAuthApiClientEmailVerification(FirebaseAuthApiClient firebaseAuthApiClient)
+    {
+        return new PostFirebaseAuthApiClientEmailVerification(firebaseAuthApiClient);
     }
 
     @Provides

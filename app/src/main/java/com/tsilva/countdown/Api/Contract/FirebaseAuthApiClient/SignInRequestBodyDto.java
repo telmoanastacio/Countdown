@@ -6,9 +6,9 @@ package com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient;
 
 public class SignInRequestBodyDto
 {
-    String email;
-    String password;
-    boolean returnSecureToken = true;
+    public String email;
+    public String password;
+    public boolean returnSecureToken = true;
 
     public SignInRequestBodyDto(String email, String password)
     {

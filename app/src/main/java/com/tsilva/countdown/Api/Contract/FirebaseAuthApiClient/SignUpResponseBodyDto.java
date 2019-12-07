@@ -6,10 +6,10 @@ package com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient;
 
 public class SignUpResponseBodyDto
 {
-    String kind;
-    String idToken;
-    String email;
-    String refreshToken;
-    Long expiresIn;
-    String localId;
+    public String kind;
+    public String idToken;
+    public String email;
+    public String refreshToken;
+    public Long expiresIn;
+    public String localId;
 }

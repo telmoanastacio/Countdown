@@ -4,6 +4,8 @@ import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInRequestBody
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpResponseBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmailRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmailResponseBodyDto;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -20,6 +22,11 @@ public interface FirebaseAuthApiClient
     Call<SignUpResponseBodyDto> postSignUp(
             @Query("key") String API_KEY,
             @Body SignUpRequestBodyDto signUpRequestBodyDto);
+
+    @POST("v1/accounts:sendOobCode")
+    Call<VerifyEmailResponseBodyDto> postVerifyEmail(
+            @Query("key") String API_KEY,
+            @Body VerifyEmailRequestBodyDto verifyEmailRequestBodyDto);
 
     @POST("v1/accounts:signInWithPassword")
     Call<SignInResponseBodyDto> postSignIn(

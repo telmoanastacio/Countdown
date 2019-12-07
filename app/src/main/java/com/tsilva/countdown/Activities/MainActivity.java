@@ -11,6 +11,9 @@ import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInRequestBody
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpResponseBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmailRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmailResponseBodyDto;
+import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientEmailVerification;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.Api.RestClient.ResponseCallback;
@@ -43,6 +46,9 @@ public final class MainActivity extends AppCompatActivity
 
     @Inject
     PostFirebaseAuthApiClientSignIn postFirebaseAuthApiClientSignIn;
+
+    @Inject
+    PostFirebaseAuthApiClientEmailVerification postFirebaseAuthApiClientEmailVerification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -116,6 +122,29 @@ public final class MainActivity extends AppCompatActivity
         }
     }
 
+    private void fetchEmailVerificationData(VerifyEmailRequestBodyDto verifyEmailRequestBodyDto)
+    {
+        if(verifyEmailRequestBodyDto != null)
+        {
+            postFirebaseAuthApiClientEmailVerification.execute(verifyEmailRequestBodyDto,
+            new ResponseCallback<VerifyEmailResponseBodyDto>()
+            {
+                @Override
+                public void success(VerifyEmailResponseBodyDto verifyEmailResponseBodyDto)
+                {
+                    System.out.println();
+                }
+
+                @Override
+                public void failure(Throwable t)
+                {
+                    t.printStackTrace();
+                    System.out.println("Couldn't sign in");
+                }
+            });
+        }
+    }
+
     private void fetchSignInData(SignInRequestBodyDto signInRequestBodyDto)
     {
         if(signInRequestBodyDto != null)
@@ -126,6 +155,7 @@ public final class MainActivity extends AppCompatActivity
                 @Override
                 public void success(SignInResponseBodyDto signInResponseBodyDto)
                 {
+                    fetchEmailVerificationData(new VerifyEmailRequestBodyDto(signInResponseBodyDto.idToken));
                     System.out.println();
                 }
 
