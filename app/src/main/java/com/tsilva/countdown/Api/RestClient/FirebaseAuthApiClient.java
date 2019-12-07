@@ -1,5 +1,7 @@
 package com.tsilva.countdown.Api.RestClient;
 
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpResponseBodyDto;
 
@@ -18,4 +20,9 @@ public interface FirebaseAuthApiClient
     Call<SignUpResponseBodyDto> postSignUp(
             @Query("key") String API_KEY,
             @Body SignUpRequestBodyDto signUpRequestBodyDto);
+
+    @POST("v1/accounts:signInWithPassword")
+    Call<SignInResponseBodyDto> postSignIn(
+            @Query("key") String API_KEY,
+            @Body SignInRequestBodyDto signInRequestBodyDto);
 }

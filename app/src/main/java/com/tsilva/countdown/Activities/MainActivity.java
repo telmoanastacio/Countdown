@@ -7,8 +7,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpResponseBodyDto;
+import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.Api.RestClient.ResponseCallback;
 import com.tsilva.countdown.CountdownApp;
@@ -38,6 +41,9 @@ public final class MainActivity extends AppCompatActivity
     @Inject
     PostFirebaseAuthApiClientSignUp postFirebaseAuthApiClientSignUp;
 
+    @Inject
+    PostFirebaseAuthApiClientSignIn postFirebaseAuthApiClientSignIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -48,8 +54,11 @@ public final class MainActivity extends AppCompatActivity
         permissionsService.getPermissions();
 
         SignUpRequestBodyDto signUpRequestBodyDto =
-                new SignUpRequestBodyDto("atumfirifiri@atum.com", "12345Thbjnvf");
-        fetchData(signUpRequestBodyDto);
+                new SignUpRequestBodyDto("atumfirifiru@atum.com", "12345Thbjnvf");
+        fetchSignUpData(signUpRequestBodyDto);
+        SignInRequestBodyDto signInRequestBodyDto =
+                new SignInRequestBodyDto("atumfirifiru@atum.com", "12345Thbjnvf");
+        fetchSignInData(signInRequestBodyDto);
 
         Uri uri = Uri.parse("android.resource://" + MainActivity.getMainContext()
                 .getPackageName() + "/" + R.raw.moon);
@@ -60,6 +69,15 @@ public final class MainActivity extends AppCompatActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        handleRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void handleRequestPermissionsResult(int requestCode,
+                                                @NonNull String[] permissions,
+                                                @NonNull int[] grantResults)
     {
         if(requestCode == PermissionsService.READ_EXTERNAL_STORAGE_CODE
                 || requestCode == PermissionsService.WRITE_EXTERNAL_STORAGE_CODE)
@@ -73,11 +91,9 @@ public final class MainActivity extends AppCompatActivity
                 }
             }
         }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void fetchData(SignUpRequestBodyDto signUpRequestBodyDto)
+    private void fetchSignUpData(SignUpRequestBodyDto signUpRequestBodyDto)
     {
         if(signUpRequestBodyDto != null)
         {
@@ -95,6 +111,29 @@ public final class MainActivity extends AppCompatActivity
                 {
                     t.printStackTrace();
                     System.out.println("Couldn't sign up");
+                }
+            });
+        }
+    }
+
+    private void fetchSignInData(SignInRequestBodyDto signInRequestBodyDto)
+    {
+        if(signInRequestBodyDto != null)
+        {
+            postFirebaseAuthApiClientSignIn.execute(signInRequestBodyDto,
+                                                    new ResponseCallback<SignInResponseBodyDto>()
+            {
+                @Override
+                public void success(SignInResponseBodyDto signInResponseBodyDto)
+                {
+                    System.out.println();
+                }
+
+                @Override
+                public void failure(Throwable t)
+                {
+                    t.printStackTrace();
+                    System.out.println("Couldn't sign in");
                 }
             });
         }
