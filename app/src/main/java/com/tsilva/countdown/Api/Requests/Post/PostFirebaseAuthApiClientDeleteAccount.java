@@ -1,7 +1,7 @@
 package com.tsilva.countdown.Api.Requests.Post;
 
-import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmailRequestBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmailResponseBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccountRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccountResponseBodyDto;
 import com.tsilva.countdown.Api.Requests.ResponseUtils;
 import com.tsilva.countdown.Api.RestClient.Clients.FirebaseAuthApiClient;
 import com.tsilva.countdown.Api.RestClient.ResponseCallback;
@@ -15,26 +15,25 @@ import retrofit2.Response;
  * Created by Telmo Silva on 07.12.2019.
  */
 
-public final class PostFirebaseAuthApiClientEmailVerification
+public final class PostFirebaseAuthApiClientDeleteAccount
 {
     private FirebaseAuthApiClient firebaseAuthApiClient = null;
 
-    public PostFirebaseAuthApiClientEmailVerification(FirebaseAuthApiClient firebaseAuthApiClient)
+    public PostFirebaseAuthApiClientDeleteAccount(FirebaseAuthApiClient firebaseAuthApiClient)
     {
         this.firebaseAuthApiClient = firebaseAuthApiClient;
     }
 
-    public void execute(VerifyEmailRequestBodyDto verifyEmailRequestBodyDto,
-                        final ResponseCallback<VerifyEmailResponseBodyDto> responseCallback)
+    public void execute(DeleteAccountRequestBodyDto deleteAccountRequestBodyDto,
+                        final ResponseCallback<DeleteAccountResponseBodyDto> responseCallback)
     {
         firebaseAuthApiClient
-                .postVerifyEmail(RestClientConfiguration.FIREBASE_WEB_API_KEY,
-                                 verifyEmailRequestBodyDto)
-                .enqueue(new Callback<VerifyEmailResponseBodyDto>()
+                .postDeleteAccount(RestClientConfiguration.FIREBASE_WEB_API_KEY,
+                                 deleteAccountRequestBodyDto)
+                .enqueue(new Callback<DeleteAccountResponseBodyDto>()
         {
             @Override
-            public void onResponse(Call<VerifyEmailResponseBodyDto> call,
-                                   Response<VerifyEmailResponseBodyDto> response)
+            public void onResponse(Call<DeleteAccountResponseBodyDto> call, Response<DeleteAccountResponseBodyDto> response)
             {
                 if(ResponseUtils.isSuccess(response))
                 {
@@ -47,7 +46,7 @@ public final class PostFirebaseAuthApiClientEmailVerification
             }
 
             @Override
-            public void onFailure(Call<VerifyEmailResponseBodyDto> call, Throwable t)
+            public void onFailure(Call<DeleteAccountResponseBodyDto> call, Throwable t)
             {
                 responseCallback.failure(t);
             }

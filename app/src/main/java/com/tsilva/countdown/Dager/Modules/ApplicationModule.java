@@ -3,7 +3,7 @@ package com.tsilva.countdown.Dager.Modules;
 import android.app.Application;
 import android.content.Context;
 
-import com.tsilva.countdown.Api.RestClient.FirebaseAuthApiClient;
+import com.tsilva.countdown.Api.RestClient.Clients.FirebaseAuthApiClient;
 import com.tsilva.countdown.Api.RestClient.RestClientConfiguration;
 import com.tsilva.countdown.Services.ImageProcessingService;
 import com.tsilva.countdown.Services.PermissionsService;

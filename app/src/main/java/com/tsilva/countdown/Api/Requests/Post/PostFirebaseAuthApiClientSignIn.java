@@ -2,10 +2,8 @@ package com.tsilva.countdown.Api.Requests.Post;
 
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInResponseBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpRequestBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpResponseBodyDto;
 import com.tsilva.countdown.Api.Requests.ResponseUtils;
-import com.tsilva.countdown.Api.RestClient.FirebaseAuthApiClient;
+import com.tsilva.countdown.Api.RestClient.Clients.FirebaseAuthApiClient;
 import com.tsilva.countdown.Api.RestClient.ResponseCallback;
 import com.tsilva.countdown.Api.RestClient.RestClientConfiguration;
 

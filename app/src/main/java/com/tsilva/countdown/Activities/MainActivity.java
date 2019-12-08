@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccountRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccountResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordResetRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordResetResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInRequestBodyDto;
@@ -15,6 +17,7 @@ import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpRequestBody
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmailRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmailResponseBodyDto;
+import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientDeleteAccount;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientEmailVerification;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientPasswordReset;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignIn;
@@ -55,6 +58,9 @@ public final class MainActivity extends AppCompatActivity
 
     @Inject
     PostFirebaseAuthApiClientPasswordReset postFirebaseAuthApiClientPasswordReset;
+
+    @Inject
+    PostFirebaseAuthApiClientDeleteAccount postFirebaseAuthApiClientDeleteAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -168,6 +174,8 @@ public final class MainActivity extends AppCompatActivity
                 {
                     fetchEmailVerificationData(
                             new VerifyEmailRequestBodyDto(signInResponseBodyDto.idToken));
+                    fetchDeleteAccount(
+                            new DeleteAccountRequestBodyDto(signInResponseBodyDto.idToken));
                     System.out.println();
                 }
 
@@ -190,6 +198,29 @@ public final class MainActivity extends AppCompatActivity
             {
                 @Override
                 public void success(PasswordResetResponseBodyDto passwordResetResponseBodyDto)
+                {
+                    System.out.println();
+                }
+
+                @Override
+                public void failure(Throwable t)
+                {
+                    t.printStackTrace();
+                    System.out.println("Couldn't sign in");
+                }
+            });
+        }
+    }
+
+    private void fetchDeleteAccount(DeleteAccountRequestBodyDto deleteAccountRequestBodyDto)
+    {
+        if(deleteAccountRequestBodyDto != null)
+        {
+            postFirebaseAuthApiClientDeleteAccount.execute(deleteAccountRequestBodyDto,
+                                                           new ResponseCallback<DeleteAccountResponseBodyDto>()
+            {
+                @Override
+                public void success(DeleteAccountResponseBodyDto deleteAccountResponseBodyDto)
                 {
                     System.out.println();
                 }

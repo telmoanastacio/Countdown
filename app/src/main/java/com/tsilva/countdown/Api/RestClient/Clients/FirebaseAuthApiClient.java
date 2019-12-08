@@ -1,5 +1,7 @@
-package com.tsilva.countdown.Api.RestClient;
+package com.tsilva.countdown.Api.RestClient.Clients;
 
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccountRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccountResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordResetRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordResetResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInRequestBodyDto;
@@ -39,4 +41,9 @@ public interface FirebaseAuthApiClient
     Call<PasswordResetResponseBodyDto> postResetPassword(
             @Query("key") String API_KEY,
             @Body PasswordResetRequestBodyDto passwordResetRequestBodyDto);
+
+    @POST("v1/accounts:delete")
+    Call<DeleteAccountResponseBodyDto> postDeleteAccount(
+            @Query("key") String API_KEY,
+            @Body DeleteAccountRequestBodyDto deleteAccountRequestBodyDto);
 }

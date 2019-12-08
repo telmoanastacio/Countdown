@@ -1,10 +1,11 @@
 package com.tsilva.countdown.Dager.Modules;
 
+import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientDeleteAccount;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientEmailVerification;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientPasswordReset;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignUp;
-import com.tsilva.countdown.Api.RestClient.FirebaseAuthApiClient;
+import com.tsilva.countdown.Api.RestClient.Clients.FirebaseAuthApiClient;
 
 import dagger.Module;
 import dagger.Provides;
@@ -42,5 +43,12 @@ public final class ApiModule
             FirebaseAuthApiClient firebaseAuthApiClient)
     {
         return new PostFirebaseAuthApiClientPasswordReset(firebaseAuthApiClient);
+    }
+
+    @Provides
+    public PostFirebaseAuthApiClientDeleteAccount providePostFirebaseAuthApiClientDeleteAccount(
+            FirebaseAuthApiClient firebaseAuthApiClient)
+    {
+        return new PostFirebaseAuthApiClientDeleteAccount(firebaseAuthApiClient);
     }
 }
