@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordResetRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordResetResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpRequestBodyDto;
@@ -14,6 +16,7 @@ import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpResponseBod
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmailRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmailResponseBodyDto;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientEmailVerification;
+import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientPasswordReset;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.Api.RestClient.ResponseCallback;
@@ -50,6 +53,9 @@ public final class MainActivity extends AppCompatActivity
     @Inject
     PostFirebaseAuthApiClientEmailVerification postFirebaseAuthApiClientEmailVerification;
 
+    @Inject
+    PostFirebaseAuthApiClientPasswordReset postFirebaseAuthApiClientPasswordReset;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -65,6 +71,9 @@ public final class MainActivity extends AppCompatActivity
         SignInRequestBodyDto signInRequestBodyDto =
                 new SignInRequestBodyDto("atumfirifiru@atum.com", "12345Thbjnvf");
         fetchSignInData(signInRequestBodyDto);
+        PasswordResetRequestBodyDto passwordResetRequestBodyDto =
+                new PasswordResetRequestBodyDto("atumfirifiru@atum.com");
+        fetchPasswordResetData(passwordResetRequestBodyDto);
 
         Uri uri = Uri.parse("android.resource://" + MainActivity.getMainContext()
                 .getPackageName() + "/" + R.raw.moon);
@@ -74,7 +83,9 @@ public final class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
     {
         handleRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -139,7 +150,7 @@ public final class MainActivity extends AppCompatActivity
                 public void failure(Throwable t)
                 {
                     t.printStackTrace();
-                    System.out.println("Couldn't sign in");
+                    System.out.println("Couldn't get verification");
                 }
             });
         }
@@ -155,7 +166,31 @@ public final class MainActivity extends AppCompatActivity
                 @Override
                 public void success(SignInResponseBodyDto signInResponseBodyDto)
                 {
-                    fetchEmailVerificationData(new VerifyEmailRequestBodyDto(signInResponseBodyDto.idToken));
+                    fetchEmailVerificationData(
+                            new VerifyEmailRequestBodyDto(signInResponseBodyDto.idToken));
+                    System.out.println();
+                }
+
+                @Override
+                public void failure(Throwable t)
+                {
+                    t.printStackTrace();
+                    System.out.println("Couldn't sign in");
+                }
+            });
+        }
+    }
+
+    private void fetchPasswordResetData(PasswordResetRequestBodyDto passwordResetRequestBodyDto)
+    {
+        if(passwordResetRequestBodyDto != null)
+        {
+            postFirebaseAuthApiClientPasswordReset.execute(passwordResetRequestBodyDto,
+                                               new ResponseCallback<PasswordResetResponseBodyDto>()
+            {
+                @Override
+                public void success(PasswordResetResponseBodyDto passwordResetResponseBodyDto)
+                {
                     System.out.println();
                 }
 

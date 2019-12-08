@@ -1,5 +1,7 @@
 package com.tsilva.countdown.Api.RestClient;
 
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordResetRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordResetResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignInResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUpRequestBodyDto;
@@ -32,4 +34,9 @@ public interface FirebaseAuthApiClient
     Call<SignInResponseBodyDto> postSignIn(
             @Query("key") String API_KEY,
             @Body SignInRequestBodyDto signInRequestBodyDto);
+
+    @POST("v1/accounts:sendOobCode")
+    Call<PasswordResetResponseBodyDto> postResetPassword(
+            @Query("key") String API_KEY,
+            @Body PasswordResetRequestBodyDto passwordResetRequestBodyDto);
 }
