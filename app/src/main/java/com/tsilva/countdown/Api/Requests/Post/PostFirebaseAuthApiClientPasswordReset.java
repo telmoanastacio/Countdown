@@ -1,7 +1,7 @@
 package com.tsilva.countdown.Api.Requests.Post;
 
-import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordResetRequestBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordResetResponseBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordReset.PasswordResetRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordReset.PasswordResetResponseBodyDto;
 import com.tsilva.countdown.Api.Requests.ResponseUtils;
 import com.tsilva.countdown.Api.RestClient.Clients.FirebaseAuthApiClient;
 import com.tsilva.countdown.Api.RestClient.ResponseCallback;

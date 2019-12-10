@@ -1,7 +1,7 @@
 package com.tsilva.countdown.Api.Requests.Post;
 
-import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccountRequestBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccountResponseBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccount.DeleteAccountRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccount.DeleteAccountResponseBodyDto;
 import com.tsilva.countdown.Api.Requests.ResponseUtils;
 import com.tsilva.countdown.Api.RestClient.Clients.FirebaseAuthApiClient;
 import com.tsilva.countdown.Api.RestClient.ResponseCallback;

@@ -1,4 +1,4 @@
-package com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient;
+package com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmail;
 
 /**
  * Created by Telmo Silva on 07.12.2019.

@@ -1,4 +1,4 @@
-package com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient;
+package com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignIn;
 
 /**
  * Created by Telmo Silva on 06.12.2019.

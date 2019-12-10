@@ -1,4 +1,4 @@
-package com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient;
+package com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordReset;
 
 /**
  * Created by Telmo Silva on 08.12.2019.

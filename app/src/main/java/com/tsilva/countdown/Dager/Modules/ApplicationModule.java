@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.tsilva.countdown.Api.RestClient.Clients.FirebaseAuthApiClient;
+import com.tsilva.countdown.Api.RestClient.Clients.FirebaseRealtimeDBApiClient;
 import com.tsilva.countdown.Api.RestClient.RestClientConfiguration;
 import com.tsilva.countdown.Services.ImageProcessingService;
 import com.tsilva.countdown.Services.PermissionsService;
@@ -78,5 +79,20 @@ public final class ApplicationModule
                 .build();
 
         return retrofit.create(FirebaseAuthApiClient.class);
+    }
+
+    @Provides
+    @Singleton
+    public FirebaseRealtimeDBApiClient provideFirebaseRealtimeDBApiClient()
+    {
+        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RestClientConfiguration.FIREBASE_REALTIME_DB_API_CLIENT_ENDPOINT)
+                .client(httpClientBuilder.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit.create(FirebaseRealtimeDBApiClient.class);
     }
 }
