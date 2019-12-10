@@ -5,8 +5,10 @@ import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.PostCountdo
 import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent.UpdateCountdownEventRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent.UpdateCountdownEventResponseBodyDto;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -28,4 +30,9 @@ public interface FirebaseRealtimeDBApiClient
             @Path("postId") String postId,
             @Query("auth") String API_KEY,
             @Body UpdateCountdownEventRequestBodyDto updateCountdownEventRequestBodyDto);
+
+    @DELETE("countdownEvents/{postId}.json")
+    Call<ResponseBody> deleteCountdownEvent(
+            @Path("postId") String postId,
+            @Query("auth") String API_KEY);
 }

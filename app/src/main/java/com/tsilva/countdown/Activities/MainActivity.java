@@ -21,6 +21,7 @@ import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmail.Verif
 import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.PostCountdownEvent.PostCountdownEventResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent.UpdateCountdownEventRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent.UpdateCountdownEventResponseBodyDto;
+import com.tsilva.countdown.Api.Requests.Delete.DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.Api.Requests.Patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientDeleteAccount;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientEmailVerification;
@@ -38,6 +39,9 @@ import com.tsilva.countdown.Services.PersistenceService;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
+
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public final class MainActivity extends AppCompatActivity
 {
@@ -77,6 +81,10 @@ public final class MainActivity extends AppCompatActivity
     @Inject
     PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
             patchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
+
+    @Inject
+    DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
+            deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -301,7 +309,7 @@ public final class MainActivity extends AppCompatActivity
     }
 
     private void fetchPatchCountdownEvent(
-            String postId,
+            final String postId,
             UpdateCountdownEventRequestBodyDto updateCountdownEventRequestBodyDto)
     {
         if(postId != null && updateCountdownEventRequestBodyDto != null)
@@ -310,21 +318,46 @@ public final class MainActivity extends AppCompatActivity
                     postId,
                     updateCountdownEventRequestBodyDto,
                     new ResponseCallback<UpdateCountdownEventResponseBodyDto>()
-                    {
-                        @Override
-                        public void success(UpdateCountdownEventResponseBodyDto
-                                                    updateCountdownEventResponseBodyDto)
-                        {
-                            System.out.println();
-                        }
+            {
+                @Override
+                public void success(UpdateCountdownEventResponseBodyDto
+                                            updateCountdownEventResponseBodyDto)
+                {
+                    fetchDeleteCountdownEvent(postId);
+                    System.out.println();
+                }
 
-                        @Override
-                        public void failure(Throwable t)
-                        {
-                            t.printStackTrace();
-                            System.out.println("Couldn't sign in");
-                        }
-                    });
+                @Override
+                public void failure(Throwable t)
+                {
+                    t.printStackTrace();
+                    System.out.println("Couldn't sign in");
+                }
+            });
+        }
+    }
+
+    private void fetchDeleteCountdownEvent(String postId)
+    {
+        if(postId != null)
+        {
+            deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
+                    .execute(postId,
+                             new ResponseCallback<ResponseBody>()
+            {
+                @Override
+                public void success(ResponseBody responseBody)
+                {
+                    System.out.println();
+                }
+
+                @Override
+                public void failure(Throwable t)
+                {
+                    t.printStackTrace();
+                    System.out.println("Couldn't sign in");
+                }
+            });
         }
     }
 
