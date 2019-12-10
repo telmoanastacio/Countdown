@@ -19,6 +19,9 @@ import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUp.SignUpResp
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmail.VerifyEmailRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmail.VerifyEmailResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.PostCountdownEvent.PostCountdownEventResponseBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent.UpdateCountdownEventRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent.UpdateCountdownEventResponseBodyDto;
+import com.tsilva.countdown.Api.Requests.Patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientDeleteAccount;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientEmailVerification;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientPasswordReset;
@@ -70,6 +73,10 @@ public final class MainActivity extends AppCompatActivity
     @Inject
     PostFirebaseRealtimeDBApiClientPostCountdownEvent
             postFirebaseRealtimeDBApiClientPostCountdownEvent;
+
+    @Inject
+    PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
+            patchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -256,7 +263,7 @@ public final class MainActivity extends AppCompatActivity
     }
 
     private void fetchPostCountdownEvent(
-            PostCountdownEventRequestBodyDto postCountdownEventRequestBodyDto)
+            final PostCountdownEventRequestBodyDto postCountdownEventRequestBodyDto)
     {
         if(postCountdownEventRequestBodyDto != null)
         {
@@ -265,8 +272,21 @@ public final class MainActivity extends AppCompatActivity
                     new ResponseCallback<PostCountdownEventResponseBodyDto>()
             {
                 @Override
-                public void success(PostCountdownEventResponseBodyDto postCountdownEventResponseBodyDto)
+                public void success(PostCountdownEventResponseBodyDto
+                                            postCountdownEventResponseBodyDto)
                 {
+                    UpdateCountdownEventRequestBodyDto updateCountdownEventRequestBodyDto =
+                            new UpdateCountdownEventRequestBodyDto(
+                                    postCountdownEventRequestBodyDto.email,
+                                    "Modified title",
+                                    postCountdownEventRequestBodyDto.details,
+                                    postCountdownEventRequestBodyDto.img,
+                                    postCountdownEventRequestBodyDto.shareWith,
+                                    postCountdownEventRequestBodyDto.tsi,
+                                    postCountdownEventRequestBodyDto.tsf
+                            );
+                    fetchPatchCountdownEvent(postCountdownEventResponseBodyDto.name,
+                                             updateCountdownEventRequestBodyDto);
                     System.out.println();
                 }
 
@@ -277,6 +297,34 @@ public final class MainActivity extends AppCompatActivity
                     System.out.println("Couldn't sign in");
                 }
             });
+        }
+    }
+
+    private void fetchPatchCountdownEvent(
+            String postId,
+            UpdateCountdownEventRequestBodyDto updateCountdownEventRequestBodyDto)
+    {
+        if(postId != null && updateCountdownEventRequestBodyDto != null)
+        {
+            patchFirebaseRealtimeDBApiClientUpdateCountdownEvent.execute(
+                    postId,
+                    updateCountdownEventRequestBodyDto,
+                    new ResponseCallback<UpdateCountdownEventResponseBodyDto>()
+                    {
+                        @Override
+                        public void success(UpdateCountdownEventResponseBodyDto
+                                                    updateCountdownEventResponseBodyDto)
+                        {
+                            System.out.println();
+                        }
+
+                        @Override
+                        public void failure(Throwable t)
+                        {
+                            t.printStackTrace();
+                            System.out.println("Couldn't sign in");
+                        }
+                    });
         }
     }
 

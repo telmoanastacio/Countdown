@@ -1,5 +1,6 @@
 package com.tsilva.countdown.Dager.Modules;
 
+import com.tsilva.countdown.Api.Requests.Patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientDeleteAccount;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientEmailVerification;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientPasswordReset;
@@ -60,5 +61,14 @@ public final class ApiModule
             FirebaseRealtimeDBApiClient firebaseRealtimeDBApiClient)
     {
         return new PostFirebaseRealtimeDBApiClientPostCountdownEvent(firebaseRealtimeDBApiClient);
+    }
+
+    @Provides
+    public PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
+    providePatchFirebaseRealtimeDBApiClientUpdateCountdownEvent(
+            FirebaseRealtimeDBApiClient firebaseRealtimeDBApiClient)
+    {
+        return new PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent(
+                firebaseRealtimeDBApiClient);
     }
 }
