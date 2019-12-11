@@ -18,18 +18,22 @@ public final class PermissionsService
     public static final int READ_EXTERNAL_STORAGE_CODE = 9010;
     public static final int WRITE_EXTERNAL_STORAGE_CODE = 9011;
 
-    private Context context;
+    private Context context = null;
+    private StorageService storageService = null;
 
     private PermissionsService() {}
 
-    private PermissionsService(Context context)
+    private PermissionsService(Context context, StorageService storageService)
     {
         this.context = context;
+        this.storageService = storageService;
     }
 
-    public static PermissionsService permissionsServiceInstance(Context context)
+    public static PermissionsService permissionsServiceInstance(
+            Context context,
+            StorageService storageService)
     {
-        return new PermissionsService(context);
+        return new PermissionsService(context, storageService);
     }
 
     public void getPermissions()
@@ -49,7 +53,7 @@ public final class PermissionsService
             if(permissionCheck != PackageManager.PERMISSION_GRANTED)
             {
                 ActivityCompat
-                        .requestPermissions(LoginScreenActivity.getLoginScreenActivity(),
+                        .requestPermissions(storageService.getCurrentActivity(),
                                             new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                             READ_EXTERNAL_STORAGE_CODE);
             }
@@ -64,7 +68,7 @@ public final class PermissionsService
         if(permissionCheck != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat
-                    .requestPermissions(LoginScreenActivity.getLoginScreenActivity(),
+                    .requestPermissions(storageService.getCurrentActivity(),
                                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                         WRITE_EXTERNAL_STORAGE_CODE);
         }

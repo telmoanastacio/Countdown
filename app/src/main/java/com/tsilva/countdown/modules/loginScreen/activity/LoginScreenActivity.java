@@ -52,10 +52,8 @@ import javax.inject.Inject;
 
 import okhttp3.ResponseBody;
 
-public final class LoginScreenActivity extends AppCompatActivity implements CurrentActivity
+public final class LoginScreenActivity extends CurrentActivity
 {
-    private static LoginScreenActivity loginScreenActivity = null;
-
     @Inject
     Context context;
 
@@ -110,8 +108,6 @@ public final class LoginScreenActivity extends AppCompatActivity implements Curr
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        loginScreenActivity = this;
-
         super.onCreate(savedInstanceState);
         CountdownApp.applicationComponent.inject(this);
         setCurrentActivity();
@@ -121,7 +117,6 @@ public final class LoginScreenActivity extends AppCompatActivity implements Curr
         loginScreenActivityBinding.setViewModel(loginScreenViewModelFactory.create());
 
         loginScreenActivityBinding.executePendingBindings();
-        permissionsService.getPermissions();
 
 //        fetchCountdownEvents();
 
@@ -437,10 +432,5 @@ public final class LoginScreenActivity extends AppCompatActivity implements Curr
                 System.out.println("Couldn't sign in");
             }
         });
-    }
-
-    public static LoginScreenActivity getLoginScreenActivity()
-    {
-        return loginScreenActivity;
     }
 }

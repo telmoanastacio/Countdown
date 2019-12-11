@@ -41,9 +41,11 @@ public final class ApplicationModule
     }
 
     @Provides
-    public PermissionsService providePermissionsService(Context context)
+    public PermissionsService providePermissionsService(
+            Context context,
+            StorageService storageService)
     {
-        return PermissionsService.permissionsServiceInstance(context);
+        return PermissionsService.permissionsServiceInstance(context, storageService);
     }
 
     @Provides

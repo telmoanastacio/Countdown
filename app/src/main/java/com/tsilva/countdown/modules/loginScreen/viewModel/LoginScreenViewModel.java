@@ -23,5 +23,11 @@ public class LoginScreenViewModel
             PermissionsService permissionsService,
             PersistenceService persistenceService,
             StorageService storageService)
-    {}
+    {
+        this.permissionsService = permissionsService;
+        this.persistenceService = persistenceService;
+        this.storageService = storageService;
+
+        this.permissionsService.getPermissions();
+    }
 }
