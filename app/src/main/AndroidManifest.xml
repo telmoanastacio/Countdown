@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".Activities.MainActivity"
+        <activity
+            android:name="com.tsilva.countdown.modules.loginScreen.activity.LoginScreenActivity"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -2,8 +2,8 @@ package com.tsilva.countdown;
 
 import android.app.Application;
 
-import com.tsilva.countdown.Dager.Components.ApplicationComponent;
-import com.tsilva.countdown.Dager.Components.ApplicationGraph;
+import com.tsilva.countdown.dager.components.ApplicationComponent;
+import com.tsilva.countdown.dager.components.ApplicationGraph;
 
 /**
  * Created by Telmo Silva on 04.12.2019.
