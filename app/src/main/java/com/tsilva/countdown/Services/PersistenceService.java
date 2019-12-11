@@ -45,9 +45,13 @@ public final class PersistenceService
     /**
      *
      * @param dataObject object to be saved. Implements {@link Serializable}
+     * @param name name of the destination file.
      * @return true if successfully saved, false otherwise
      */
-    public <T extends Serializable> boolean saveSerializableObject(Context context, T dataObject)
+    public <T extends Serializable> boolean saveSerializableObject(
+            Context context,
+            T dataObject,
+            String name)
     {
         FileOutputStream fileOutputStream = null;
         ObjectOutputStream objectOutputStream = null;
@@ -55,7 +59,7 @@ public final class PersistenceService
         try
         {
             fileOutputStream = context
-                    .openFileOutput(dataObject.getClass().getSimpleName(), Context.MODE_PRIVATE);
+                    .openFileOutput(name, Context.MODE_PRIVATE);
             objectOutputStream = new ObjectOutputStream(fileOutputStream);
 
             objectOutputStream.writeObject(dataObject);
@@ -64,7 +68,7 @@ public final class PersistenceService
         }
         catch(IOException e)
         {
-            Log.e(TAG, "saveSerializableObject: couldn't save " + dataObject.getClass().getSimpleName(), e);
+            Log.e(TAG, "saveSerializableObject: couldn't save " + name, e);
 
             return false;
         }
@@ -97,17 +101,34 @@ public final class PersistenceService
 
     /**
      *
+     * Same as saveSerializableObject(Context context, T dataObject, String name)
+     * but no file name provided
+     */
+    public <T extends Serializable> boolean saveSerializableObject(
+            Context context,
+            T dataObject)
+    {
+        return saveSerializableObject(context, dataObject,
+                                      dataObject.getClass().getSimpleName() + ".dat");
+    }
+
+    /**
+     *
      * @param blankDataObject object to be populated. Implements {@link Serializable}
+     * @param name name of the object file source.
      * @return true if successfully populated blankDataObject, false otherwise
      */
-    public <T extends Serializable> boolean loadSerializableObject(Context context, T blankDataObject)
+    public <T extends Serializable> boolean loadSerializableObject(
+            Context context,
+            T blankDataObject,
+            String name)
     {
         FileInputStream fileInputStream = null;
         ObjectInputStream objectInputStream = null;
 
         try
         {
-            fileInputStream = context.openFileInput(blankDataObject.getClass().getSimpleName());
+            fileInputStream = context.openFileInput(name);
             objectInputStream = new ObjectInputStream(fileInputStream);
 
             Object o = objectInputStream.readObject();
@@ -121,12 +142,12 @@ public final class PersistenceService
         }
         catch(IOException e)
         {
-            Log.e(TAG, "loadSerializableObject: couldn't load " + blankDataObject.getClass().getSimpleName(), e);
+            Log.e(TAG, "loadSerializableObject: couldn't load " + name, e);
             return false;
         }
         catch(ClassNotFoundException e)
         {
-            Log.e(TAG, "loadSerializableObject: couldn't find " + blankDataObject.getClass().getSimpleName(), e);
+            Log.e(TAG, "loadSerializableObject: couldn't find " + name, e);
             return false;
         }
         finally
@@ -154,6 +175,20 @@ public final class PersistenceService
                 }
             }
         }
+    }
+
+    /**
+     *
+     * Same as loadSerializableObject(Context context, T blankDataObject, String name)
+     * but no file name provided
+     */
+    public <T extends Serializable> boolean loadSerializableObject(
+            Context context,
+            T blankDataObject)
+    {
+        return loadSerializableObject(
+                context, blankDataObject,
+                blankDataObject.getClass().getSimpleName() + ".dat");
     }
 
     public Drawable loadImage(File image)
