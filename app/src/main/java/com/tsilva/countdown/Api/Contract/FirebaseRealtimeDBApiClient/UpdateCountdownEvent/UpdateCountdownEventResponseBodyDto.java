@@ -1,4 +1,4 @@
-package com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent;
+package com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountdownEvent;
 
 import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.PostCountdownEvent.PostCountdownEventRequestBodyDto;
 

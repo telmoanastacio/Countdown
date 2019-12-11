@@ -1,4 +1,4 @@
-package com.tsilva.countdown.Api.Requests.Delete;
+package com.tsilva.countdown.Api.Requests.Get;
 
 import com.tsilva.countdown.Api.Requests.ResponseUtils;
 import com.tsilva.countdown.Api.RestClient.Clients.FirebaseRealtimeDBApiClient;
@@ -14,22 +14,20 @@ import retrofit2.Response;
  * Created by Telmo Silva on 07.12.2019.
  */
 
-public final class DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
+public final class GetFirebaseRealtimeDBApiClientGetCountdownEvents
 {
     private FirebaseRealtimeDBApiClient firebaseRealtimeDBApiClient = null;
 
-    public DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent(
+    public GetFirebaseRealtimeDBApiClientGetCountdownEvents(
             FirebaseRealtimeDBApiClient firebaseRealtimeDBApiClient)
     {
         this.firebaseRealtimeDBApiClient = firebaseRealtimeDBApiClient;
     }
 
-    public void execute(String postId,
-                        final ResponseCallback<ResponseBody> responseCallback)
+    public void execute(final ResponseCallback<ResponseBody> responseCallback)
     {
         firebaseRealtimeDBApiClient
-                .deleteCountdownEvent(postId,
-                                      RestClientConfiguration.FIREBASE_REALTIME_DB_API_KEY)
+                .getCountdownEvents(RestClientConfiguration.FIREBASE_REALTIME_DB_API_KEY)
                 .enqueue(new Callback<ResponseBody>()
         {
             @Override
@@ -41,8 +39,7 @@ public final class DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
                 }
                 else
                 {
-                    responseCallback.failure(
-                            ResponseUtils.buildStatusCodeThrowable(response));
+                    responseCallback.failure(ResponseUtils.buildStatusCodeThrowable(response));
                 }
             }
 

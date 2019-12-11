@@ -1,27 +1,29 @@
 package com.tsilva.countdown.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccount.DeleteAccountRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.DeleteAccount.DeleteAccountResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordReset.PasswordResetRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.PasswordReset.PasswordResetResponseBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.PostCountdownEvent.PostCountdownEventRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignIn.SignInRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignIn.SignInResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUp.SignUpRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.SignUp.SignUpResponseBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmail.VerifyEmailRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseAuthApiClient.VerifyEmail.VerifyEmailResponseBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.GetCountdownEvent.CountdownEventsDto;
+import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.PostCountdownEvent.PostCountdownEventRequestBodyDto;
 import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.PostCountdownEvent.PostCountdownEventResponseBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent.UpdateCountdownEventRequestBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent.UpdateCountdownEventResponseBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountdownEvent.UpdateCountdownEventRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountdownEvent.UpdateCountdownEventResponseBodyDto;
 import com.tsilva.countdown.Api.Requests.Delete.DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
+import com.tsilva.countdown.Api.Requests.Get.GetFirebaseRealtimeDBApiClientGetCountdownEvents;
 import com.tsilva.countdown.Api.Requests.Patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientDeleteAccount;
 import com.tsilva.countdown.Api.Requests.Post.PostFirebaseAuthApiClientEmailVerification;
@@ -36,11 +38,13 @@ import com.tsilva.countdown.Services.ImageProcessingService;
 import com.tsilva.countdown.Services.PermissionsService;
 import com.tsilva.countdown.Services.PersistenceService;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public final class MainActivity extends AppCompatActivity
@@ -86,6 +90,9 @@ public final class MainActivity extends AppCompatActivity
     DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
             deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 
+    @Inject
+    GetFirebaseRealtimeDBApiClientGetCountdownEvents getFirebaseRealtimeDBApiClientGetCountdownEvents;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -95,16 +102,18 @@ public final class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         permissionsService.getPermissions();
 
-        PostCountdownEventRequestBodyDto postCountdownEventRequestBodyDto =
-                new PostCountdownEventRequestBodyDto(
-                        "tberlinera11@hotmail.com",
-                        "Test title 3",
-                        "Test details 3",
-                        "",
-                        new ArrayList<String>(0),
-                        123425543L,
-                        123425543L);
-        fetchPostCountdownEvent(postCountdownEventRequestBodyDto);
+        fetchCountdownEvents();
+
+//        PostCountdownEventRequestBodyDto postCountdownEventRequestBodyDto =
+//                new PostCountdownEventRequestBodyDto(
+//                        "tberlinera11@hotmail.com",
+//                        "Test title 3",
+//                        "Test details 3",
+//                        "",
+//                        new ArrayList<String>(0),
+//                        123425543L,
+//                        123425543L);
+//        fetchPostCountdownEvent(postCountdownEventRequestBodyDto);
 
 //        SignUpRequestBodyDto signUpRequestBodyDto =
 //                new SignUpRequestBodyDto("atumfirifiru@atum.com", "12345Thbjnvf");
@@ -116,11 +125,11 @@ public final class MainActivity extends AppCompatActivity
 //                new PasswordResetRequestBodyDto("atumfirifiru@atum.com");
 //        fetchPasswordResetData(passwordResetRequestBodyDto);
 
-        Uri uri = Uri.parse("android.resource://" + MainActivity.getMainContext()
-                .getPackageName() + "/" + R.raw.moon);
-        persistenceService.loadCachedImages();
-        imageProcessingService.constantFrameRateBuildCache(uri, 100L);
-        System.out.println();
+//        Uri uri = Uri.parse("android.resource://" + MainActivity.getMainContext()
+//                .getPackageName() + "/" + R.raw.moon);
+//        persistenceService.loadCachedImages();
+//        imageProcessingService.constantFrameRateBuildCache(uri, 100L);
+//        System.out.println();
     }
 
     @Override
@@ -361,9 +370,33 @@ public final class MainActivity extends AppCompatActivity
         }
     }
 
-    public static Context getMainContext()
+    private void fetchCountdownEvents()
     {
-        return mainActivity;
+        getFirebaseRealtimeDBApiClientGetCountdownEvents
+                .execute(new ResponseCallback<ResponseBody>()
+        {
+            @Override
+            public void success(ResponseBody responseBody)
+            {
+                try
+                {
+                    CountdownEventsDto countdownEventsDto =
+                            new CountdownEventsDto(new JSONObject(responseBody.string()));
+                    System.out.println();
+                }
+                catch(JSONException | IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void failure(Throwable t)
+            {
+                t.printStackTrace();
+                System.out.println("Couldn't sign in");
+            }
+        });
     }
 
     public static MainActivity getMainActivity()

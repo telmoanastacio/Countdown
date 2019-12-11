@@ -1,9 +1,7 @@
 package com.tsilva.countdown.Api.Requests.Patch;
 
-import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.PostCountdownEvent.PostCountdownEventRequestBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.PostCountdownEvent.PostCountdownEventResponseBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent.UpdateCountdownEventRequestBodyDto;
-import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountDownEvent.UpdateCountdownEventResponseBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountdownEvent.UpdateCountdownEventRequestBodyDto;
+import com.tsilva.countdown.Api.Contract.FirebaseRealtimeDBApiClient.UpdateCountdownEvent.UpdateCountdownEventResponseBodyDto;
 import com.tsilva.countdown.Api.Requests.ResponseUtils;
 import com.tsilva.countdown.Api.RestClient.Clients.FirebaseRealtimeDBApiClient;
 import com.tsilva.countdown.Api.RestClient.ResponseCallback;
