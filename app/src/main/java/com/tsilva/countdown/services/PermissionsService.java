@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.tsilva.countdown.modules.loginScreen.activity.LoginScreenActivity;
-
 /**
  * Created by Telmo Silva on 04.12.2019.
  */

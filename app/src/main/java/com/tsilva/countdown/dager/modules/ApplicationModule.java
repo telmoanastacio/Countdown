@@ -6,6 +6,7 @@ import android.content.Context;
 import com.tsilva.countdown.api.restClient.RestClientConfiguration;
 import com.tsilva.countdown.api.restClient.clients.FirebaseAuthApiClient;
 import com.tsilva.countdown.api.restClient.clients.FirebaseRealtimeDBApiClient;
+import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.ImageProcessingService;
 import com.tsilva.countdown.services.PermissionsService;
 import com.tsilva.countdown.services.PersistenceService;
@@ -52,6 +53,12 @@ public final class ApplicationModule
     public PersistenceService providePersistenceService(Context context)
     {
         return PersistenceService.persistenceServiceInstance(context);
+    }
+
+    @Provides
+    public UserLoginCredentials provideUserLoginCredentials(PersistenceService persistenceService)
+    {
+        return new UserLoginCredentials(persistenceService.getSharedPreferencesOperations());
     }
 
     @Provides

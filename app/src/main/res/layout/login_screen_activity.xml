@@ -12,20 +12,114 @@
             type="com.tsilva.countdown.modules.loginScreen.viewModel.LoginScreenViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".modules.loginScreen.activity.LoginScreenActivity">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/regularPaddingSize"
+            android:paddingTop="@dimen/regularPaddingSize"
+            android:paddingRight="@dimen/regularPaddingSize"
+            android:paddingBottom="@dimen/regularPaddingSize"
+            android:orientation="vertical"
+            android:gravity="center" >
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:layout_weight="0.6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@{viewModel.loginScreenObservables.imageViewDrawable}"
+                android:layout_marginBottom="@dimen/regularPaddingSize"
+                android:windowSoftInputMode="adjustNothing"
+                tools:src="@color/colorPrimary" />
+
+            <TextView
+                android:layout_weight="0.4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{viewModel.loginScreenObservables.loadingViewVisibility}"
+                android:gravity="center"
+                android:text="@string/loading"
+                tools:visibility="gone"/>
+
+            <ScrollView
+                android:layout_weight="0.4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{viewModel.loginScreenObservables.loginInterfaceVisibility}"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:hint="@string/email"
+                        android:text="@={viewModel.loginScreenObservables.emailTextContent}"
+                        android:textSize="@dimen/regularEditTextSize"
+                        android:gravity="center" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:hint="@string/password"
+                        android:text="@={viewModel.loginScreenObservables.passwordTextContent}"
+                        android:textSize="@dimen/regularEditTextSize"
+                        android:gravity="center" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:visibility="visible" >
+
+                        <Button
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/signUp"
+                            android:textSize="@dimen/regularTextSize"
+                            android:onClick="@{viewModel::onSignUpButtonClick}" />
+
+                        <Button
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/login"
+                            android:textSize="@dimen/regularTextSize"
+                            android:onClick="@{viewModel::onLoginButtonClick}" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/forgotPassword"
+                        android:textSize="@dimen/regularTextSize"
+                        android:onClick="@{viewModel::onForgotPasswordButtonClick}" />
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.loginScreenObservables.alertTextContent}"
+                        tools:text="ALERT MESSAGES \njkfleljfe\nfieferi\nfefji" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </layout>

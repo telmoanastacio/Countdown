@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Countdown</string>
+
+    <string name="loading">Loading…</string>
+
+    <string name="email">Enter email</string>
+    <string name="password">Enter password</string>
+    <string name="back">Back</string>
+    <string name="forward">Forward</string>
+    <string name="login">Login</string>
+    <string name="signUp">SignUp</string>
+    <string name="forgotPassword">Forgot password</string>
+    <string name="invalidCredentials">Invalid credentials</string>
+    <string name="invalidEmail">Invalid email address</string>
+    <string name="invalidPassword">Must contain at least 6 characters</string>
+
+    <string name="emailVerificationSent">Check your email for verification message</string>
+    <string name="passwordResetSent">Check your email for password reset message</string>
+    <string name="registerFirst">Must check email verification message first</string>
+
+    <string name="signUpFailed">Couldn\'t sign up</string>
+    <string name="loginFailed">Couldn\'t login</string>
+    <string name="emailVerificationFailed">Couldn\'t send email verification</string>
+    <string name="passwordResetFailed">Couldn\'t send password reset</string>
 </resources>

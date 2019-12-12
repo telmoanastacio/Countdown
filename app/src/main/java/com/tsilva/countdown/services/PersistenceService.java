@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.tsilva.countdown.persistence.sharedPreferences.SharedPreferencesOperations;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,12 +24,14 @@ public final class PersistenceService
 {
     private static final String TAG = "PersistenceService";
 
+    private SharedPreferencesOperations sharedPreferencesOperations = null;
     private String imageCacheDirPath = null;
 
     private PersistenceService() {}
 
     private PersistenceService(Context context)
     {
+        this.sharedPreferencesOperations = new SharedPreferencesOperations(context);
         this.imageCacheDirPath = context.getFilesDir().getPath()
                 + File.separator + "imageCache";
     }
@@ -278,6 +282,11 @@ public final class PersistenceService
                 e.printStackTrace();
             }
         }
+    }
+
+    public SharedPreferencesOperations getSharedPreferencesOperations()
+    {
+        return sharedPreferencesOperations;
     }
 
     // private methods

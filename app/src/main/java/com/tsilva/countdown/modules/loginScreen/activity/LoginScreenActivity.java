@@ -5,21 +5,12 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.tsilva.countdown.CountdownApp;
 import com.tsilva.countdown.R;
 import com.tsilva.countdown.api.contract.firebaseAuthApiClient.deleteAccount.DeleteAccountRequestBodyDto;
 import com.tsilva.countdown.api.contract.firebaseAuthApiClient.deleteAccount.DeleteAccountResponseBodyDto;
-import com.tsilva.countdown.api.contract.firebaseAuthApiClient.passwordReset.PasswordResetRequestBodyDto;
-import com.tsilva.countdown.api.contract.firebaseAuthApiClient.passwordReset.PasswordResetResponseBodyDto;
-import com.tsilva.countdown.api.contract.firebaseAuthApiClient.signIn.SignInRequestBodyDto;
-import com.tsilva.countdown.api.contract.firebaseAuthApiClient.signIn.SignInResponseBodyDto;
-import com.tsilva.countdown.api.contract.firebaseAuthApiClient.signUp.SignUpRequestBodyDto;
-import com.tsilva.countdown.api.contract.firebaseAuthApiClient.signUp.SignUpResponseBodyDto;
-import com.tsilva.countdown.api.contract.firebaseAuthApiClient.verifyEmail.VerifyEmailRequestBodyDto;
-import com.tsilva.countdown.api.contract.firebaseAuthApiClient.verifyEmail.VerifyEmailResponseBodyDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventsDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdownEvent.PostCountdownEventRequestBodyDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdownEvent.PostCountdownEventResponseBodyDto;
@@ -29,10 +20,6 @@ import com.tsilva.countdown.api.requests.delete.DeleteFirebaseRealtimeDBApiClien
 import com.tsilva.countdown.api.requests.get.GetFirebaseRealtimeDBApiClientGetCountdownEvents;
 import com.tsilva.countdown.api.requests.patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientDeleteAccount;
-import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientEmailVerification;
-import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientPasswordReset;
-import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignIn;
-import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.api.requests.post.PostFirebaseRealtimeDBApiClientPostCountdownEvent;
 import com.tsilva.countdown.api.restClient.ResponseCallback;
 import com.tsilva.countdown.databinding.LoginScreenActivityBinding;
@@ -73,18 +60,6 @@ public final class LoginScreenActivity extends CurrentActivity
     ImageProcessingService imageProcessingService;
 
     @Inject
-    PostFirebaseAuthApiClientSignUp postFirebaseAuthApiClientSignUp;
-
-    @Inject
-    PostFirebaseAuthApiClientSignIn postFirebaseAuthApiClientSignIn;
-
-    @Inject
-    PostFirebaseAuthApiClientEmailVerification postFirebaseAuthApiClientEmailVerification;
-
-    @Inject
-    PostFirebaseAuthApiClientPasswordReset postFirebaseAuthApiClientPasswordReset;
-
-    @Inject
     PostFirebaseAuthApiClientDeleteAccount postFirebaseAuthApiClientDeleteAccount;
 
     @Inject
@@ -109,6 +84,13 @@ public final class LoginScreenActivity extends CurrentActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+//        //Remove title bar
+//        getSupportActionBar().hide();
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        //Remove notification bar
+//        getWindow().setFlags(
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         CountdownApp.applicationComponent.inject(this);
         setCurrentActivity();
 
@@ -130,22 +112,6 @@ public final class LoginScreenActivity extends CurrentActivity
 //                        123425543L,
 //                        123425543L);
 //        fetchPostCountdownEvent(postCountdownEventRequestBodyDto);
-
-//        SignUpRequestBodyDto signUpRequestBodyDto =
-//                new SignUpRequestBodyDto("atumfirifiru@atum.com", "12345Thbjnvf");
-//        fetchSignUpData(signUpRequestBodyDto);
-//        SignInRequestBodyDto signInRequestBodyDto =
-//                new SignInRequestBodyDto("atumfirifiru@atum.com", "12345Thbjnvf");
-//        fetchSignInData(signInRequestBodyDto);
-//        PasswordResetRequestBodyDto passwordResetRequestBodyDto =
-//                new PasswordResetRequestBodyDto("atumfirifiru@atum.com");
-//        fetchPasswordResetData(passwordResetRequestBodyDto);
-
-//        Uri uri = Uri.parse("android.resource://" + LoginScreenActivity.getMainContext()
-//                .getPackageName() + "/" + R.raw.moon);
-//        persistenceService.loadCachedImages();
-//        imageProcessingService.constantFrameRateBuildCache(uri, 100L);
-//        System.out.println();
     }
 
     @Override
@@ -192,102 +158,6 @@ public final class LoginScreenActivity extends CurrentActivity
                     return;
                 }
             }
-        }
-    }
-
-    private void fetchSignUpData(SignUpRequestBodyDto signUpRequestBodyDto)
-    {
-        if(signUpRequestBodyDto != null)
-        {
-            postFirebaseAuthApiClientSignUp.execute(signUpRequestBodyDto,
-                                                    new ResponseCallback<SignUpResponseBodyDto>()
-            {
-                @Override
-                public void success(SignUpResponseBodyDto signUpResponseBodyDto)
-                {
-                    System.out.println();
-                }
-
-                @Override
-                public void failure(Throwable t)
-                {
-                    t.printStackTrace();
-                    System.out.println("Couldn't sign up");
-                }
-            });
-        }
-    }
-
-    private void fetchEmailVerificationData(VerifyEmailRequestBodyDto verifyEmailRequestBodyDto)
-    {
-        if(verifyEmailRequestBodyDto != null)
-        {
-            postFirebaseAuthApiClientEmailVerification.execute(verifyEmailRequestBodyDto,
-            new ResponseCallback<VerifyEmailResponseBodyDto>()
-            {
-                @Override
-                public void success(VerifyEmailResponseBodyDto verifyEmailResponseBodyDto)
-                {
-                    System.out.println();
-                }
-
-                @Override
-                public void failure(Throwable t)
-                {
-                    t.printStackTrace();
-                    System.out.println("Couldn't get verification");
-                }
-            });
-        }
-    }
-
-    private void fetchSignInData(SignInRequestBodyDto signInRequestBodyDto)
-    {
-        if(signInRequestBodyDto != null)
-        {
-            postFirebaseAuthApiClientSignIn.execute(signInRequestBodyDto,
-                                                    new ResponseCallback<SignInResponseBodyDto>()
-            {
-                @Override
-                public void success(SignInResponseBodyDto signInResponseBodyDto)
-                {
-                    fetchEmailVerificationData(
-                            new VerifyEmailRequestBodyDto(signInResponseBodyDto.idToken));
-                    fetchDeleteAccount(
-                            new DeleteAccountRequestBodyDto(signInResponseBodyDto.idToken));
-                    System.out.println();
-                }
-
-                @Override
-                public void failure(Throwable t)
-                {
-                    t.printStackTrace();
-                    System.out.println("Couldn't sign in");
-                }
-            });
-        }
-    }
-
-    private void fetchPasswordResetData(PasswordResetRequestBodyDto passwordResetRequestBodyDto)
-    {
-        if(passwordResetRequestBodyDto != null)
-        {
-            postFirebaseAuthApiClientPasswordReset.execute(passwordResetRequestBodyDto,
-                                               new ResponseCallback<PasswordResetResponseBodyDto>()
-            {
-                @Override
-                public void success(PasswordResetResponseBodyDto passwordResetResponseBodyDto)
-                {
-                    System.out.println();
-                }
-
-                @Override
-                public void failure(Throwable t)
-                {
-                    t.printStackTrace();
-                    System.out.println("Couldn't sign in");
-                }
-            });
         }
     }
 
