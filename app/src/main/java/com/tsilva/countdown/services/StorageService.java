@@ -1,6 +1,6 @@
 package com.tsilva.countdown.services;
 
-import com.tsilva.countdown.storage.CurrentActivity;
+import com.tsilva.countdown.storage.activity.ActivityManager;
 
 /**
  * Created by Telmo Silva on 05.12.2019.
@@ -8,9 +8,10 @@ import com.tsilva.countdown.storage.CurrentActivity;
 
 public final class StorageService
 {
-    private static StorageService storageServiceInstance;
+    private static StorageService storageServiceInstance = null;
+    private static boolean isInitialized = false;
 
-    private CurrentActivity currentActivity = null;
+    private ActivityManager activityManager = null;
 
     private StorageService() {}
 
@@ -23,18 +24,18 @@ public final class StorageService
         return storageServiceInstance;
     }
 
-    public CurrentActivity getCurrentActivity()
+    public void init(ActivityManager activityManager)
     {
-        return currentActivity;
-    }
-
-    public void setCurrentActivity(CurrentActivity currentActivity) throws Throwable
-    {
-        if(currentActivity == null)
+        if(!isInitialized)
         {
-            throw new Throwable("No valid activity provided");
+            this.activityManager = activityManager;
         }
 
-        this.currentActivity = currentActivity;
+        isInitialized = true;
+    }
+
+    public ActivityManager getActivityManager()
+    {
+        return activityManager;
     }
 }

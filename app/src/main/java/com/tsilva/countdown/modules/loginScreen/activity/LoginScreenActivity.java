@@ -28,7 +28,7 @@ import com.tsilva.countdown.services.ImageProcessingService;
 import com.tsilva.countdown.services.PermissionsService;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
-import com.tsilva.countdown.storage.CurrentActivity;
+import com.tsilva.countdown.storage.activity.CurrentActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,9 +58,6 @@ public final class LoginScreenActivity extends CurrentActivity
 
     @Inject
     ImageProcessingService imageProcessingService;
-
-    @Inject
-    PostFirebaseAuthApiClientDeleteAccount postFirebaseAuthApiClientDeleteAccount;
 
     @Inject
     PostFirebaseRealtimeDBApiClientPostCountdownEvent
@@ -117,7 +114,7 @@ public final class LoginScreenActivity extends CurrentActivity
     @Override
     public CurrentActivity getCurrentActivity()
     {
-        return storageService.getCurrentActivity();
+        return storageService.getActivityManager().getCurrentActivity();
     }
 
     @Override
@@ -125,7 +122,7 @@ public final class LoginScreenActivity extends CurrentActivity
     {
         try
         {
-            storageService.setCurrentActivity(this);
+            storageService.getActivityManager().setCurrentActivity(this);
         }
         catch(Throwable throwable)
         {
@@ -158,29 +155,6 @@ public final class LoginScreenActivity extends CurrentActivity
                     return;
                 }
             }
-        }
-    }
-
-    private void fetchDeleteAccount(DeleteAccountRequestBodyDto deleteAccountRequestBodyDto)
-    {
-        if(deleteAccountRequestBodyDto != null)
-        {
-            postFirebaseAuthApiClientDeleteAccount.execute(deleteAccountRequestBodyDto,
-                                                           new ResponseCallback<DeleteAccountResponseBodyDto>()
-            {
-                @Override
-                public void success(DeleteAccountResponseBodyDto deleteAccountResponseBodyDto)
-                {
-                    System.out.println();
-                }
-
-                @Override
-                public void failure(Throwable t)
-                {
-                    t.printStackTrace();
-                    System.out.println("Couldn't sign in");
-                }
-            });
         }
     }
 

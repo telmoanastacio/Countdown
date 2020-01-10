@@ -1,6 +1,7 @@
 package com.tsilva.countdown.modules.loginScreen.viewModel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
@@ -22,12 +23,13 @@ import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientPasswordR
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.api.restClient.ResponseCallback;
-import com.tsilva.countdown.modules.loginScreen.activity.LoginScreenActivity;
+import com.tsilva.countdown.modules.optionsMenu.activity.OptionsMenuActivity;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.ImageProcessingService;
 import com.tsilva.countdown.services.PermissionsService;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
+import com.tsilva.countdown.storage.activity.CurrentActivity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,6 +63,8 @@ public final class LoginScreenViewModel
     private Context context = null;
 
     public LoginScreenObservables loginScreenObservables = null;
+
+    private LoginScreenViewModel() {}
 
     LoginScreenViewModel(
             PermissionsService permissionsService,
@@ -107,6 +111,15 @@ public final class LoginScreenViewModel
                 .set(viewType == ViewType.LOADING ? View.VISIBLE : View.GONE);
         loginScreenObservables.loginInterfaceVisibility
                 .set(viewType == ViewType.CONTENT ? View.VISIBLE : View.GONE);
+    }
+
+    public void onMenuClick(View view)
+    {
+        CurrentActivity currentActivity = storageService.getActivityManager().getCurrentActivity();
+        Intent optionMenu = new Intent(currentActivity, OptionsMenuActivity.class);
+        optionMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        currentActivity.startActivity(optionMenu);
     }
 
     public void onSignUpButtonClick(View view)
@@ -212,8 +225,10 @@ public final class LoginScreenViewModel
                         @Override
                         public void success(SignUpResponseBodyDto signUpResponseBodyDto)
                         {
+                            String idToken = signUpResponseBodyDto.idToken;
                             fetchEmailVerificationData(
-                                    new VerifyEmailRequestBodyDto(signUpResponseBodyDto.idToken));
+                                    new VerifyEmailRequestBodyDto(idToken));
+                            userLoginCredentials.setIdToken(idToken);
                         }
 
                         @Override
@@ -268,13 +283,14 @@ public final class LoginScreenViewModel
                             {
                                 loginScreenObservables.alertTextContent.set("");
 
+                                userLoginCredentials.setIdToken(signInResponseBodyDto.idToken);
+
                                 Uri uri = Uri.parse("android.resource://" + context
                                         .getPackageName() + "/" + R.raw.moon);
-                                Drawable[] images = persistenceService.loadCachedImages();
-                                if(images == null)
+                                if(persistenceService.loadCachedImages() == null)
                                 {
-                                    imageProcessingService.constantFrameRateBuildCache(uri, 100L);
-                                    images = persistenceService.loadCachedImages();
+                                    imageProcessingService.constantFrameRateBuildCache(
+                                            uri, 100L);
                                 }
                                 // go to next activity
                             }
@@ -338,7 +354,14 @@ public final class LoginScreenViewModel
             loadingViewVisibility.set(View.VISIBLE);
             loginInterfaceVisibility.set(View.GONE);
 
-            emailTextContent.set(userLoginCredentials.getEmail());
+            if(userLoginCredentials.hasLastStoredCredentials())
+            {
+                emailTextContent.set(userLoginCredentials.getEmail());
+            }
+            else
+            {
+                emailTextContent.set("");
+            }
             passwordTextContent.set("");
             alertTextContent.set("");
 

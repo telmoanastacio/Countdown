@@ -2,11 +2,13 @@ package com.tsilva.countdown.dager.modules;
 
 import android.content.Context;
 
+import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientDeleteAccount;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientEmailVerification;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientPasswordReset;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.modules.loginScreen.viewModel.LoginScreenViewModelFactory;
+import com.tsilva.countdown.modules.optionsMenu.viewModel.OptionsMenuViewModelFactory;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.ImageProcessingService;
 import com.tsilva.countdown.services.PermissionsService;
@@ -47,5 +49,22 @@ public final class ViewModelsModule
                 postFirebaseAuthApiClientEmailVerification,
                 postFirebaseAuthApiClientPasswordReset,
                 context);
+    }
+
+    @Provides
+    public OptionsMenuViewModelFactory provideOptionsMenuViewModelFactory(
+            Context context,
+            PersistenceService persistenceService,
+            StorageService storageService,
+            UserLoginCredentials userLoginCredentials,
+            PostFirebaseAuthApiClientDeleteAccount
+                    postFirebaseAuthApiClientDeleteAccount)
+    {
+        return new OptionsMenuViewModelFactory(
+                context,
+                persistenceService,
+                storageService,
+                userLoginCredentials,
+                postFirebaseAuthApiClientDeleteAccount);
     }
 }

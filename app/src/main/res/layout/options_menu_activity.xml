@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.tsilva.countdown.modules.optionsMenu.viewModel.OptionsMenuViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/regularPaddingSize"
+            android:paddingTop="@dimen/regularPaddingSize"
+            android:paddingRight="@dimen/regularPaddingSize"
+            android:paddingBottom="@dimen/regularPaddingSize"
+            android:orientation="vertical"
+            android:gravity="top" >
+
+            <TextView
+                style="@style/regularTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/optionsMenuItemDeleteAccount"
+                android:textStyle="bold"
+                android:onClick="@{viewModel::onDeleteAccountClick}" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

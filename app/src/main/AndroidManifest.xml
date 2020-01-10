@@ -27,6 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.tsilva.countdown.modules.optionsMenu.activity.OptionsMenuActivity"
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
+            android:theme="@style/OptionsMenuActivityTheme" >
+        </activity>
 
     </application>
 

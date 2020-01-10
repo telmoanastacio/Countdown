@@ -51,9 +51,10 @@ public final class PermissionsService
             if(permissionCheck != PackageManager.PERMISSION_GRANTED)
             {
                 ActivityCompat
-                        .requestPermissions(storageService.getCurrentActivity(),
-                                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                            READ_EXTERNAL_STORAGE_CODE);
+                        .requestPermissions(
+                                storageService.getActivityManager().getCurrentActivity(),
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                READ_EXTERNAL_STORAGE_CODE);
             }
         }
     }
@@ -66,7 +67,7 @@ public final class PermissionsService
         if(permissionCheck != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat
-                    .requestPermissions(storageService.getCurrentActivity(),
+                    .requestPermissions(storageService.getActivityManager().getCurrentActivity(),
                                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                         WRITE_EXTERNAL_STORAGE_CODE);
         }

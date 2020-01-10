@@ -11,6 +11,7 @@ import com.tsilva.countdown.services.ImageProcessingService;
 import com.tsilva.countdown.services.PermissionsService;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
+import com.tsilva.countdown.storage.activity.ActivityManager;
 
 import javax.inject.Singleton;
 
@@ -70,9 +71,17 @@ public final class ApplicationModule
     }
 
     @Provides
-    public StorageService provideStorageService()
+    public ActivityManager provideActivityManager()
     {
-        return StorageService.storageServiceInstance();
+        return ActivityManager.activityManagerInstance();
+    }
+
+    @Provides
+    public StorageService provideStorageService(ActivityManager activityManager)
+    {
+        StorageService storageService = StorageService.storageServiceInstance();
+        storageService.init(activityManager);
+        return storageService;
     }
 
     @Provides

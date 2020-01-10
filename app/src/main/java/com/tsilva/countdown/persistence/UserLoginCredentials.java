@@ -12,6 +12,7 @@ public final class UserLoginCredentials
 {
     private final static String EMAIL = "EMAIL";
     private final static String PASSWORD = "PASSWORD";
+    private final static String ID_TOKEN = "ID_TOKEN";
 
     private SharedPreferencesOperations sharedPreferencesOperations;
 
@@ -24,6 +25,18 @@ public final class UserLoginCredentials
     {
         sharedPreferencesOperations.putString(EMAIL, userName);
         sharedPreferencesOperations.putString(PASSWORD, password);
+    }
+
+    public void setIdToken(String idToken)
+    {
+        sharedPreferencesOperations.putString(ID_TOKEN, idToken);
+    }
+
+    public void clearCredencials()
+    {
+        sharedPreferencesOperations.putString(EMAIL, null);
+        sharedPreferencesOperations.putString(PASSWORD, null);
+        sharedPreferencesOperations.putString(ID_TOKEN, null);
     }
 
     public boolean hasLastStoredCredentials()
@@ -42,5 +55,10 @@ public final class UserLoginCredentials
     public String getPassword()
     {
         return sharedPreferencesOperations.getString(PASSWORD);
+    }
+
+    public String getIdToken()
+    {
+        return sharedPreferencesOperations.getString(ID_TOKEN);
     }
 }

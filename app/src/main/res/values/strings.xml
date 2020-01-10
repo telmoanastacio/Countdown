@@ -22,4 +22,6 @@
     <string name="loginFailed">Couldn\'t login</string>
     <string name="emailVerificationFailed">Couldn\'t send email verification</string>
     <string name="passwordResetFailed">Couldn\'t send password reset</string>
+
+    <string name="optionsMenuItemDeleteAccount">Delete account</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.tsilva.countdown.storage;
+package com.tsilva.countdown.storage.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
