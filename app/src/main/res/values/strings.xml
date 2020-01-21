@@ -24,4 +24,6 @@
     <string name="passwordResetFailed">Couldn\'t send password reset</string>
 
     <string name="optionsMenuItemDeleteAccount">Delete account</string>
+
+    <string name="newEvent">New event</string>
 </resources>

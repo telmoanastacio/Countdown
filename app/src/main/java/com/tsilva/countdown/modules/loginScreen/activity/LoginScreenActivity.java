@@ -9,9 +9,6 @@ import androidx.databinding.DataBindingUtil;
 
 import com.tsilva.countdown.CountdownApp;
 import com.tsilva.countdown.R;
-import com.tsilva.countdown.api.contract.firebaseAuthApiClient.deleteAccount.DeleteAccountRequestBodyDto;
-import com.tsilva.countdown.api.contract.firebaseAuthApiClient.deleteAccount.DeleteAccountResponseBodyDto;
-import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventsDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdownEvent.PostCountdownEventRequestBodyDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdownEvent.PostCountdownEventResponseBodyDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.updateCountdownEvent.UpdateCountdownEventRequestBodyDto;
@@ -19,7 +16,6 @@ import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.updateCount
 import com.tsilva.countdown.api.requests.delete.DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.get.GetFirebaseRealtimeDBApiClientGetCountdownEvents;
 import com.tsilva.countdown.api.requests.patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
-import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientDeleteAccount;
 import com.tsilva.countdown.api.requests.post.PostFirebaseRealtimeDBApiClientPostCountdownEvent;
 import com.tsilva.countdown.api.restClient.ResponseCallback;
 import com.tsilva.countdown.databinding.LoginScreenActivityBinding;
@@ -30,17 +26,14 @@ import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
 import com.tsilva.countdown.storage.activity.CurrentActivity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
 import javax.inject.Inject;
 
 import okhttp3.ResponseBody;
 
 public final class LoginScreenActivity extends CurrentActivity
 {
+    public static boolean isAlive = false;
+
     @Inject
     Context context;
 
@@ -60,10 +53,6 @@ public final class LoginScreenActivity extends CurrentActivity
     ImageProcessingService imageProcessingService;
 
     @Inject
-    PostFirebaseRealtimeDBApiClientPostCountdownEvent
-            postFirebaseRealtimeDBApiClientPostCountdownEvent;
-
-    @Inject
     PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
             patchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 
@@ -81,6 +70,8 @@ public final class LoginScreenActivity extends CurrentActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        isAlive = true;
+
 //        //Remove title bar
 //        getSupportActionBar().hide();
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -96,19 +87,13 @@ public final class LoginScreenActivity extends CurrentActivity
         loginScreenActivityBinding.setViewModel(loginScreenViewModelFactory.create());
 
         loginScreenActivityBinding.executePendingBindings();
+    }
 
-//        fetchCountdownEvents();
-
-//        PostCountdownEventRequestBodyDto postCountdownEventRequestBodyDto =
-//                new PostCountdownEventRequestBodyDto(
-//                        "tberlinera11@hotmail.com",
-//                        "Test title 3",
-//                        "Test details 3",
-//                        "",
-//                        new ArrayList<String>(0),
-//                        123425543L,
-//                        123425543L);
-//        fetchPostCountdownEvent(postCountdownEventRequestBodyDto);
+    @Override
+    protected void onDestroy()
+    {
+        isAlive = false;
+        super.onDestroy();
     }
 
     @Override
@@ -155,44 +140,6 @@ public final class LoginScreenActivity extends CurrentActivity
                     return;
                 }
             }
-        }
-    }
-
-    private void fetchPostCountdownEvent(
-            final PostCountdownEventRequestBodyDto postCountdownEventRequestBodyDto)
-    {
-        if(postCountdownEventRequestBodyDto != null)
-        {
-            postFirebaseRealtimeDBApiClientPostCountdownEvent.execute(
-                    postCountdownEventRequestBodyDto,
-                    new ResponseCallback<PostCountdownEventResponseBodyDto>()
-            {
-                @Override
-                public void success(PostCountdownEventResponseBodyDto
-                                            postCountdownEventResponseBodyDto)
-                {
-                    UpdateCountdownEventRequestBodyDto updateCountdownEventRequestBodyDto =
-                            new UpdateCountdownEventRequestBodyDto(
-                                    postCountdownEventRequestBodyDto.email,
-                                    "Modified title",
-                                    postCountdownEventRequestBodyDto.details,
-                                    postCountdownEventRequestBodyDto.img,
-                                    postCountdownEventRequestBodyDto.shareWith,
-                                    postCountdownEventRequestBodyDto.tsi,
-                                    postCountdownEventRequestBodyDto.tsf
-                            );
-                    fetchPatchCountdownEvent(postCountdownEventResponseBodyDto.name,
-                                             updateCountdownEventRequestBodyDto);
-                    System.out.println();
-                }
-
-                @Override
-                public void failure(Throwable t)
-                {
-                    t.printStackTrace();
-                    System.out.println("Couldn't sign in");
-                }
-            });
         }
     }
 
@@ -247,34 +194,5 @@ public final class LoginScreenActivity extends CurrentActivity
                 }
             });
         }
-    }
-
-    private void fetchCountdownEvents()
-    {
-        getFirebaseRealtimeDBApiClientGetCountdownEvents
-                .execute(new ResponseCallback<ResponseBody>()
-        {
-            @Override
-            public void success(ResponseBody responseBody)
-            {
-                try
-                {
-                    CountdownEventsDto countdownEventsDto =
-                            new CountdownEventsDto(new JSONObject(responseBody.string()));
-                    System.out.println();
-                }
-                catch(JSONException | IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void failure(Throwable t)
-            {
-                t.printStackTrace();
-                System.out.println("Couldn't sign in");
-            }
-        });
     }
 }

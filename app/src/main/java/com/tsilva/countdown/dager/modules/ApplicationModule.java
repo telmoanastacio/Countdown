@@ -12,6 +12,8 @@ import com.tsilva.countdown.services.PermissionsService;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
 import com.tsilva.countdown.storage.activity.ActivityManager;
+import com.tsilva.countdown.storage.adapter.AdapterManager;
+import com.tsilva.countdown.storage.status.StatusManager;
 
 import javax.inject.Singleton;
 
@@ -77,10 +79,27 @@ public final class ApplicationModule
     }
 
     @Provides
-    public StorageService provideStorageService(ActivityManager activityManager)
+    public AdapterManager provideAdapterManager()
+    {
+        return AdapterManager.adapterManagerInstance();
+    }
+
+    @Provides
+    public StatusManager providesStatusManager()
+    {
+        return StatusManager.statusManagerInstance();
+    }
+
+    @Provides
+    public StorageService provideStorageService(
+            PersistenceService persistenceService,
+            ActivityManager activityManager,
+            AdapterManager adapterManager,
+            StatusManager statusManager
+    )
     {
         StorageService storageService = StorageService.storageServiceInstance();
-        storageService.init(activityManager);
+        storageService.init(persistenceService, activityManager, adapterManager, statusManager);
         return storageService;
     }
 

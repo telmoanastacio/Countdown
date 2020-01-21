@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.tsilva.countdown.persistence.sharedPreferences.SharedPreferencesOperations;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -116,13 +117,14 @@ public final class PersistenceService
 
     /**
      *
-     * @param blankDataObject object to be populated. Implements {@link Serializable}
+     * @param expectedReturnClass is the class object of {@link T} and {@link T}
+     *                            implements {@link Serializable}
      * @param name name of the object file source.
-     * @return true if successfully populated blankDataObject, false otherwise
+     * @return {@link T} object if the file contains the same type of object
      */
-    public <T extends Serializable> boolean loadSerializableObject(
+    public <T extends Serializable> T loadSerializableObject(
             Context context,
-            T blankDataObject,
+            Class<T> expectedReturnClass,
             String name)
     {
         FileInputStream fileInputStream = null;
@@ -134,23 +136,27 @@ public final class PersistenceService
             objectInputStream = new ObjectInputStream(fileInputStream);
 
             Object o = objectInputStream.readObject();
-            if(o.getClass().equals(blankDataObject))
+            if(o.getClass().equals(expectedReturnClass))
             {
-                blankDataObject = (T) objectInputStream.readObject();
-                return true;
+                return (T) o;
             }
 
-            return false;
+            return null;
+        }
+        catch(EOFException e)
+        {
+            Log.e(TAG, "loadSerializableObject: couldn't load " + name, e);
+            return null;
         }
         catch(IOException e)
         {
             Log.e(TAG, "loadSerializableObject: couldn't load " + name, e);
-            return false;
+            return null;
         }
         catch(ClassNotFoundException e)
         {
             Log.e(TAG, "loadSerializableObject: couldn't find " + name, e);
-            return false;
+            return null;
         }
         finally
         {
@@ -181,16 +187,16 @@ public final class PersistenceService
 
     /**
      *
-     * Same as loadSerializableObject(Context context, T blankDataObject, String name)
+     * Same as loadSerializableObject(Context context, Class<T> expectedReturnClass, String name)
      * but no file name provided
      */
-    public <T extends Serializable> boolean loadSerializableObject(
+    public <T extends Serializable> T loadSerializableObject(
             Context context,
-            T blankDataObject)
+            Class<T> expectedReturnClass)
     {
         return loadSerializableObject(
-                context, blankDataObject,
-                blankDataObject.getClass().getSimpleName() + ".dat");
+                context, expectedReturnClass,
+                expectedReturnClass.getSimpleName() + ".dat");
     }
 
     public Drawable loadImage(File image)

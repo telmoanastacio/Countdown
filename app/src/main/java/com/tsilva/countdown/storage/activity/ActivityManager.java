@@ -1,5 +1,9 @@
 package com.tsilva.countdown.storage.activity;
 
+import android.content.Intent;
+
+import com.tsilva.countdown.modules.loginScreen.activity.LoginScreenActivity;
+
 import java.util.Stack;
 
 /**
@@ -44,6 +48,17 @@ public final class ActivityManager
         }
 
         this.currentActivityStack.push(this.currentActivity);
+    }
+
+    public void backToLoginScreen()
+    {
+        CurrentActivity currentActivity = getCurrentActivity();
+        Intent loginScreen = new Intent(currentActivity, LoginScreenActivity.class);
+        loginScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        currentActivity.startActivity(loginScreen);
+
+        clearCurrentActivityStack();
     }
 
     public void clearCurrentActivityStack()

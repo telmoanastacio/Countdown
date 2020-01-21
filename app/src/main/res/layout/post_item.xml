@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.tsilva.countdown.modules.postList.viewModel.item.PostItemViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:paddingLeft="@dimen/regularPaddingSize"
+            android:paddingTop="@dimen/regularPaddingSize"
+            android:paddingRight="@dimen/regularPaddingSize"
+            android:paddingBottom="@dimen/regularPaddingSize"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal"
+                android:onClick="@{viewModel::onItemClicked}" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:layout_marginRight="10dp"
+                    android:src="@{viewModel.postItemObservables.progressDrawable}"
+                    tools:src="@drawable/ic_launcher_background" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        style="@style/regularTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.postItemObservables.title}"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        tools:text="Title LOOOOOOooooong tiiiitleeeeeee... have too put more characters"/>
+
+                    <RelativeLayout
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <ProgressBar
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="4dp"
+                            android:max="100"
+                            android:progressDrawable="@drawable/progress_bar"
+                            android:progressBackgroundTintMode="multiply"
+                            android:progressBackgroundTint="@color/tachographProgressBackgroundTint"
+                            android:progressTintMode="multiply"
+                            android:progressTint="@{viewModel.postItemObservables.progressColor}"
+                            android:progress="@{viewModel.postItemObservables.progress}"
+                            tools:progress="70"
+                            tools:progressTint="@color/green" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:layout_marginRight="10dp"
+                    android:src="@{viewModel.postItemObservables.editDrawable}"
+                    tools:src="@drawable/ic_launcher_background"
+                    android:onClick="@{viewModel::onEditClicked}" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@{viewModel.postItemObservables.deleteDrawable}"
+                    tools:src="@drawable/ic_launcher_background"
+                    android:onClick="@{viewModel::onDeleteClicked}" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

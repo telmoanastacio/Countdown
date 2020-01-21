@@ -54,13 +54,7 @@ public final class OptionsMenuViewModel
 
         userLoginCredentials.clearCredencials();
 
-        CurrentActivity currentActivity = storageService.getActivityManager().getCurrentActivity();
-        Intent loginScreen = new Intent(currentActivity, LoginScreenActivity.class);
-        loginScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        currentActivity.startActivity(loginScreen);
-
-        storageService.getActivityManager().clearCurrentActivityStack();
+        storageService.getActivityManager().backToLoginScreen();
     }
 
     private void fetchDeleteAccount(DeleteAccountRequestBodyDto deleteAccountRequestBodyDto)

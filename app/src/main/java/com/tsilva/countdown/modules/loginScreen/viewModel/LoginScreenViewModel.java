@@ -23,7 +23,9 @@ import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientPasswordR
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.api.restClient.ResponseCallback;
+import com.tsilva.countdown.modules.loginScreen.activity.LoginScreenActivity;
 import com.tsilva.countdown.modules.optionsMenu.activity.OptionsMenuActivity;
+import com.tsilva.countdown.modules.postList.activity.PostListActivity;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.ImageProcessingService;
 import com.tsilva.countdown.services.PermissionsService;
@@ -92,10 +94,10 @@ public final class LoginScreenViewModel
 
         this.permissionsService.getPermissions();
 
-        setupObservables();
+        setup();
     }
 
-    private void setupObservables()
+    private void setup()
     {
         this.loginScreenObservables = new LoginScreenObservables();
         showView(ViewType.LOADING);
@@ -235,8 +237,11 @@ public final class LoginScreenViewModel
                         public void failure(Throwable t)
                         {
                             t.printStackTrace();
-                            loginScreenObservables.alertTextContent.set(
-                                    context.getString(R.string.signUpFailed));
+                            if(LoginScreenActivity.isAlive)
+                            {
+                                loginScreenObservables.alertTextContent.set(
+                                        context.getString(R.string.signUpFailed));
+                            }
                         }
                     });
         }
@@ -253,16 +258,22 @@ public final class LoginScreenViewModel
                         @Override
                         public void success(VerifyEmailResponseBodyDto verifyEmailResponseBodyDto)
                         {
-                            loginScreenObservables.alertTextContent.set(
-                                    context.getString(R.string.emailVerificationSent));
+                            if(LoginScreenActivity.isAlive)
+                            {
+                                loginScreenObservables.alertTextContent.set(
+                                        context.getString(R.string.emailVerificationSent));
+                            }
                         }
 
                         @Override
                         public void failure(Throwable t)
                         {
                             t.printStackTrace();
-                            loginScreenObservables.alertTextContent.set(
-                                    context.getString(R.string.emailVerificationFailed));
+                            if(LoginScreenActivity.isAlive)
+                            {
+                                loginScreenObservables.alertTextContent.set(
+                                        context.getString(R.string.emailVerificationFailed));
+                            }
                         }
                     });
         }
@@ -281,7 +292,10 @@ public final class LoginScreenViewModel
                         {
                             if(signInResponseBodyDto.registered)
                             {
-                                loginScreenObservables.alertTextContent.set("");
+                                if(LoginScreenActivity.isAlive)
+                                {
+                                    loginScreenObservables.alertTextContent.set("");
+                                }
 
                                 userLoginCredentials.setIdToken(signInResponseBodyDto.idToken);
 
@@ -292,12 +306,25 @@ public final class LoginScreenViewModel
                                     imageProcessingService.constantFrameRateBuildCache(
                                             uri, 100L);
                                 }
+
                                 // go to next activity
+                                CurrentActivity currentActivity =
+                                        storageService.getActivityManager().getCurrentActivity();
+                                Intent postList =
+                                        new Intent(currentActivity, PostListActivity.class);
+                                postList.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                currentActivity.startActivity(postList);
+
+                                storageService.getActivityManager().clearCurrentActivityStack();
                             }
                             else
                             {
-                                loginScreenObservables.alertTextContent.set(
-                                        context.getString(R.string.registerFirst));
+                                if(LoginScreenActivity.isAlive)
+                                {
+                                    loginScreenObservables.alertTextContent.set(
+                                            context.getString(R.string.registerFirst));
+                                }
                             }
                         }
 
@@ -305,8 +332,11 @@ public final class LoginScreenViewModel
                         public void failure(Throwable t)
                         {
                             t.printStackTrace();
-                            loginScreenObservables.alertTextContent.set(
-                                    context.getString(R.string.loginFailed));
+                            if(LoginScreenActivity.isAlive)
+                            {
+                                loginScreenObservables.alertTextContent.set(
+                                        context.getString(R.string.loginFailed));
+                            }
                         }
                     });
         }
@@ -323,16 +353,22 @@ public final class LoginScreenViewModel
                         @Override
                         public void success(PasswordResetResponseBodyDto passwordResetResponseBodyDto)
                         {
-                            loginScreenObservables.alertTextContent.set(
-                                    context.getString(R.string.passwordResetSent));
+                            if(LoginScreenActivity.isAlive)
+                            {
+                                loginScreenObservables.alertTextContent.set(
+                                        context.getString(R.string.passwordResetSent));
+                            }
                         }
 
                         @Override
                         public void failure(Throwable t)
                         {
                             t.printStackTrace();
-                            loginScreenObservables.alertTextContent.set(
-                                    context.getString(R.string.passwordResetFailed));
+                            if(LoginScreenActivity.isAlive)
+                            {
+                                loginScreenObservables.alertTextContent.set(
+                                        context.getString(R.string.passwordResetFailed));
+                            }
                         }
                     });
         }

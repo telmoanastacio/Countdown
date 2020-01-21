@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto" >
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.tsilva.countdown.modules.postList.viewModel.PostListViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <ListView
+                android:layout_weight="1.0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:clipToPadding="false"
+                android:scrollbars="none"
+                bind:items="@{viewModel.postItemList}" />
+
+            <Button
+                style="@style/regularTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:paddingLeft="@dimen/regularPaddingSize"
+                android:paddingTop="@dimen/regularPaddingSize"
+                android:paddingRight="@dimen/regularPaddingSize"
+                android:paddingBottom="@dimen/regularPaddingSize"
+                android:text="@string/newEvent"
+                android:textStyle="bold"
+                android:onClick="@{viewModel::onNewEventClick}" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

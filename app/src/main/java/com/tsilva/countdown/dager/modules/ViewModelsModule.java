@@ -2,13 +2,17 @@ package com.tsilva.countdown.dager.modules;
 
 import android.content.Context;
 
+import com.tsilva.countdown.api.requests.get.GetFirebaseRealtimeDBApiClientGetCountdownEvents;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientDeleteAccount;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientEmailVerification;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientPasswordReset;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignUp;
+import com.tsilva.countdown.api.requests.post.PostFirebaseRealtimeDBApiClientPostCountdownEvent;
 import com.tsilva.countdown.modules.loginScreen.viewModel.LoginScreenViewModelFactory;
 import com.tsilva.countdown.modules.optionsMenu.viewModel.OptionsMenuViewModelFactory;
+import com.tsilva.countdown.modules.postList.viewModel.PostListViewModelFactory;
+import com.tsilva.countdown.modules.postList.viewModel.item.PostItemViewModelFactory;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.ImageProcessingService;
 import com.tsilva.countdown.services.PermissionsService;
@@ -66,5 +70,35 @@ public final class ViewModelsModule
                 storageService,
                 userLoginCredentials,
                 postFirebaseAuthApiClientDeleteAccount);
+    }
+
+    @Provides
+    public PostListViewModelFactory providePostListViewModelFactory(
+            Context context,
+            PersistenceService persistenceService,
+            StorageService storageService,
+            GetFirebaseRealtimeDBApiClientGetCountdownEvents
+                    getFirebaseRealtimeDBApiClientGetCountdownEvents,
+            PostFirebaseRealtimeDBApiClientPostCountdownEvent
+                    postFirebaseRealtimeDBApiClientPostCountdownEvent)
+    {
+        return new PostListViewModelFactory(
+                context,
+                persistenceService,
+                storageService,
+                getFirebaseRealtimeDBApiClientGetCountdownEvents,
+                postFirebaseRealtimeDBApiClientPostCountdownEvent);
+    }
+
+    @Provides
+    public PostItemViewModelFactory providePostItemViewModelFactory(
+            Context context,
+            PersistenceService persistenceService,
+            StorageService storageService)
+    {
+        return new PostItemViewModelFactory(
+                context,
+                persistenceService,
+                storageService);
     }
 }
