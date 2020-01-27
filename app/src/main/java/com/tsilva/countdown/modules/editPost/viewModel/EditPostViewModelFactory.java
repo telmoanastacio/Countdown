@@ -1,42 +1,44 @@
-package com.tsilva.countdown.modules.postList.viewModel.item;
+package com.tsilva.countdown.modules.editPost.viewModel;
 
 import android.content.Context;
+import android.view.View;
 
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventDto;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
-import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
- * Created by Telmo Silva on 22.01.2020.
+ * Created by Telmo Silva on 27.01.2020.
  */
 
-public final class PostItemViewModelFactory
+public final class EditPostViewModelFactory
 {
     private Context context = null;
-    private PersistenceService persistenceService = null;
     private StorageService storageService = null;
     private UserLoginCredentials userLoginCredentials = null;
 
-    public PostItemViewModelFactory(
+    public EditPostViewModelFactory(
             Context context,
-            PersistenceService persistenceService,
             StorageService storageService,
             UserLoginCredentials userLoginCredentials)
     {
         this.context = context;
-        this.persistenceService = persistenceService;
         this.storageService = storageService;
         this.userLoginCredentials = userLoginCredentials;
     }
 
-    public PostItemViewModel create(String postId, CountdownEventDto countdownEventDto)
+    public EditPostViewModel create(
+            @NotNull View root,
+            String postId,
+            CountdownEventDto countdownEventDto)
     {
-        return new PostItemViewModel(
+        return new EditPostViewModel(
                 context,
-                persistenceService,
                 storageService,
                 userLoginCredentials,
+                root,
                 postId,
                 countdownEventDto);
     }

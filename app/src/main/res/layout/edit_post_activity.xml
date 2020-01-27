@@ -9,13 +9,12 @@
 
         <variable
             name="viewModel"
-            type="com.tsilva.countdown.modules.loginScreen.viewModel.LoginScreenViewModel" />
+            type="com.tsilva.countdown.modules.editPost.viewModel.EditPostViewModel" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".modules.loginScreen.activity.LoginScreenActivity">
+        android:layout_height="match_parent" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,37 +34,18 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@{viewModel.loginScreenObservables.imageViewDrawable}"
+                    android:src="@{viewModel.editPostObservables.imageViewDrawable}"
                     android:layout_marginBottom="@dimen/regularPaddingSize"
                     android:windowSoftInputMode="adjustNothing"
                     tools:src="@color/colorPrimary" />
 
-                <ImageButton
-                    android:scaleX="0.6"
-                    android:scaleY="0.6"
-                    android:layout_width="16dp"
-                    android:layout_height="42dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
-                    android:onClick="@{viewModel::onMenuClick}" />
-
             </RelativeLayout>
-
-            <TextView
-                android:layout_weight="0.4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="@{viewModel.loginScreenObservables.loadingViewVisibility}"
-                android:gravity="center"
-                android:text="@string/loading"
-                tools:visibility="gone"/>
 
             <ScrollView
                 android:layout_weight="0.4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{viewModel.loginScreenObservables.loginInterfaceVisibility}"
+                android:visibility="visible"
                 tools:visibility="visible">
 
                 <LinearLayout
@@ -78,17 +58,55 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
-                        android:hint="@string/email"
-                        android:text="@={viewModel.loginScreenObservables.emailTextContent}"
-                        android:gravity="center" />
+                        android:hint="@string/title"
+                        android:text="@={viewModel.editPostObservables.titleTextContent}"
+                        android:gravity="center" >
+
+                        <requestFocus />
+
+                    </EditText>
 
                     <EditText
                         style="@style/regularEditTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:hint="@string/password"
-                        android:text="@={viewModel.loginScreenObservables.passwordTextContent}"
+                        android:inputType="textMultiLine"
+                        android:minLines="4"
+                        android:hint="@string/details"
+                        android:text="@={viewModel.editPostObservables.detailsTextContent}"
+                        android:gravity="center|bottom" />
+
+                    <EditText
+                        style="@style/regularEditTextStyle"
+                        android:id="@+id/editTextTsi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="datetime"
+                        android:maxLength="16"
+                        android:hint="@string/tsi"
+                        android:text="@{viewModel.editPostObservables.tsiTextContent}"
+                        android:gravity="center"
+                        android:addTextChangedListener="@{viewModel.setStartDateTimeTextWatcher()}" />
+
+                    <EditText
+                        style="@style/regularEditTextStyle"
+                        android:id="@+id/editTextTsf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="datetime"
+                        android:maxLength="16"
+                        android:hint="@string/tsf"
+                        android:text="@{viewModel.editPostObservables.tsfTextContent}"
+                        android:gravity="center"
+                        android:addTextChangedListener="@{viewModel.setEndDateTimeTextWatcher()}" />
+
+                    <EditText
+                        style="@style/regularEditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:hint="@string/share"
+                        android:text="@={viewModel.editPostObservables.shareTextContent}"
                         android:gravity="center" />
 
                     <LinearLayout
@@ -102,33 +120,27 @@
                             android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="@string/signUp"
+                            android:text="@string/image"
                             android:textSize="@dimen/regularTextSize"
-                            android:onClick="@{viewModel::onSignUpButtonClick}" />
+                            android:enabled="false"
+                            android:onClick="@{viewModel::onImageClick}" />
 
                         <Button
                             android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="@string/login"
+                            android:text="@string/confirm"
                             android:textSize="@dimen/regularTextSize"
-                            android:onClick="@{viewModel::onLoginButtonClick}" />
+                            android:onClick="@{viewModel::onConfirmClick}" />
 
                     </LinearLayout>
 
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/forgotPassword"
+                        android:text="@string/cancel"
                         android:textSize="@dimen/regularTextSize"
-                        android:onClick="@{viewModel::onForgotPasswordButtonClick}" />
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.loginScreenObservables.alertTextContent}"
-                        tools:text="ALERT MESSAGES \njkfleljfe\nfieferi\nfefji" />
+                        android:onClick="@{viewModel::onCancelClick}" />
 
                 </LinearLayout>
 

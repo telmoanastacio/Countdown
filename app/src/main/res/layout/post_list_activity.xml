@@ -36,11 +36,12 @@
                 style="@style/regularTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:paddingLeft="@dimen/regularPaddingSize"
-                android:paddingTop="@dimen/regularPaddingSize"
-                android:paddingRight="@dimen/regularPaddingSize"
-                android:paddingBottom="@dimen/regularPaddingSize"
+                android:layout_marginLeft="@dimen/regularPaddingSize"
+                android:layout_marginTop="@dimen/regularPaddingSize"
+                android:layout_marginRight="@dimen/regularPaddingSize"
+                android:layout_marginBottom="@dimen/regularPaddingSize"
                 android:text="@string/newEvent"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:onClick="@{viewModel::onNewEventClick}" />
 

@@ -39,6 +39,12 @@
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
             android:theme="@style/PostListActivityTheme" >
         </activity>
+        <activity
+            android:name="com.tsilva.countdown.modules.editPost.activity.EditPostActivity"
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
+            android:theme="@style/EditPostActivityTheme" >
+        </activity>
 
     </application>
 

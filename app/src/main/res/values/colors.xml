@@ -9,4 +9,7 @@
     <color name="red">#FFFF0000</color>
     <color name="orange">#FFFF8800</color>
     <color name="green">#FF00FF00</color>
+
+    <color name="enabled">#FF303030</color>
+    <color name="disabled">#FFC0C0C0</color>
 </resources>

@@ -1,8 +1,10 @@
 package com.tsilva.countdown.modules.postList.viewModel.item;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.opengl.Visibility;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
@@ -11,8 +13,12 @@ import androidx.databinding.ObservableInt;
 
 import com.tsilva.countdown.R;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventDto;
+import com.tsilva.countdown.modules.ModulesConfiguration;
+import com.tsilva.countdown.modules.editPost.activity.EditPostActivity;
+import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
+import com.tsilva.countdown.storage.activity.CurrentActivity;
 import com.tsilva.countdown.storage.status.StatusManager;
 
 import java.util.Date;
@@ -26,9 +32,11 @@ public final class PostItemViewModel
     private Context context = null;
     private PersistenceService persistenceService = null;
     private StorageService storageService = null;
+    private UserLoginCredentials userLoginCredentials = null;
     private int position = -1;
     private String postId = null;
     private CountdownEventDto countdownEventDto = null;
+    private boolean isOwner = false;
 
     public PostItemObservables postItemObservables = null;
 
@@ -37,12 +45,14 @@ public final class PostItemViewModel
     PostItemViewModel(Context context,
                       PersistenceService persistenceService,
                       StorageService storageService,
+                      UserLoginCredentials userLoginCredentials,
                       String postId,
                       CountdownEventDto countdownEventDto)
     {
         this.context = context;
         this.persistenceService = persistenceService;
         this.storageService = storageService;
+        this.userLoginCredentials = userLoginCredentials;
         this.postId = postId;
         this.countdownEventDto = countdownEventDto;
 
@@ -60,18 +70,25 @@ public final class PostItemViewModel
 
         postItemObservables.title.set(countdownEventDto.title);
 
+        if(countdownEventDto.email != null
+                && userLoginCredentials.getEmail().equals(countdownEventDto.email))
+        {
+            isOwner = true;
+        }
+
         setupDrawables();
     }
 
     private void setupDrawables()
     {
+        int color = isOwner ? R.color.enabled : R.color.disabled;
         Drawable edit = context.getResources().getDrawable(R.drawable.edit);
         Drawable delete = context.getResources().getDrawable(R.drawable.delete);
 
         edit.mutate().setColorFilter(
-                ContextCompat.getColor(context, android.R.color.black), PorterDuff.Mode.MULTIPLY);
+                ContextCompat.getColor(context, color), PorterDuff.Mode.MULTIPLY);
         delete.mutate().setColorFilter(
-                ContextCompat.getColor(context, android.R.color.black), PorterDuff.Mode.MULTIPLY);
+                ContextCompat.getColor(context, color), PorterDuff.Mode.MULTIPLY);
 
         postItemObservables.editDrawable.set(edit);
         postItemObservables.deleteDrawable.set(delete);
@@ -91,10 +108,20 @@ public final class PostItemViewModel
         System.out.println("=== CLICKED ITEM: " + position);
     }
 
-    //TODO: send to the edit view
     public void onEditClicked(View view)
     {
-        System.out.println("=== CLICKED EDIT ITEM: " + position);
+        if(isOwner)
+        {
+            CurrentActivity currentActivity =
+                    storageService.getActivityManager().getCurrentActivity();
+            Intent editPost =
+                    new Intent(currentActivity, EditPostActivity.class);
+            editPost.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            editPost.putExtra(ModulesConfiguration.POST_ID, postId);
+            editPost.putExtra(ModulesConfiguration.COUNTDOWN_EVENT_DTO, countdownEventDto);
+
+            currentActivity.startActivity(editPost);
+        }
     }
 
     //TODO: show a confirmation dialog

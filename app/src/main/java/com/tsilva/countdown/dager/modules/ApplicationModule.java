@@ -13,7 +13,9 @@ import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
 import com.tsilva.countdown.storage.activity.ActivityManager;
 import com.tsilva.countdown.storage.adapter.AdapterManager;
+import com.tsilva.countdown.storage.sharedViewModel.SharedViewModelManager;
 import com.tsilva.countdown.storage.status.StatusManager;
+import com.tsilva.countdown.storage.utils.UtilsManager;
 
 import javax.inject.Singleton;
 
@@ -85,9 +87,21 @@ public final class ApplicationModule
     }
 
     @Provides
+    public SharedViewModelManager provideSharedViewModelManager()
+    {
+        return SharedViewModelManager.sharedViewModelManagerInstance();
+    }
+
+    @Provides
     public StatusManager providesStatusManager()
     {
         return StatusManager.statusManagerInstance();
+    }
+
+    @Provides
+    public UtilsManager providesUtilsManager()
+    {
+        return UtilsManager.utilsManagerInstance();
     }
 
     @Provides
@@ -95,11 +109,19 @@ public final class ApplicationModule
             PersistenceService persistenceService,
             ActivityManager activityManager,
             AdapterManager adapterManager,
-            StatusManager statusManager
+            SharedViewModelManager sharedViewModelManager,
+            StatusManager statusManager,
+            UtilsManager utilsManager
     )
     {
         StorageService storageService = StorageService.storageServiceInstance();
-        storageService.init(persistenceService, activityManager, adapterManager, statusManager);
+        storageService.init(
+                persistenceService,
+                activityManager,
+                adapterManager,
+                sharedViewModelManager,
+                statusManager,
+                utilsManager);
         return storageService;
     }
 

@@ -26,4 +26,13 @@
     <string name="optionsMenuItemDeleteAccount">Delete account</string>
 
     <string name="newEvent">New event</string>
+
+    <string name="title">Title</string>
+    <string name="details">Details</string>
+    <string name="tsi">Start (YYYY-MM-DD HH:MM)</string>
+    <string name="tsf">End (YYYY-MM-DD HH:MM)</string>
+    <string name="share">Share with… (emails separated by ,)</string>
+    <string name="image">Add image</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>

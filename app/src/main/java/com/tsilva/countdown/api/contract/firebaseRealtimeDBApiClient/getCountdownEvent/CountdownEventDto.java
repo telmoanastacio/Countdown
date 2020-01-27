@@ -1,6 +1,7 @@
 package com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent;
 
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdownEvent.PostCountdownEventRequestBodyDto;
+import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.updateCountdownEvent.UpdateCountdownEventRequestBodyDto;
 
 import org.json.JSONObject;
 
@@ -38,5 +39,17 @@ public class CountdownEventDto implements Serializable
         this.img = postCountdownEventRequestBodyDto.img;
         this.tsi = postCountdownEventRequestBodyDto.tsi;
         this.tsf = postCountdownEventRequestBodyDto.tsf;
+        this.shareWith = postCountdownEventRequestBodyDto.shareWith;
+    }
+
+    public CountdownEventDto(UpdateCountdownEventRequestBodyDto updateCountdownEventRequestBodyDto)
+    {
+        this.email = updateCountdownEventRequestBodyDto.email;
+        this.title = updateCountdownEventRequestBodyDto.title;
+        this.details = updateCountdownEventRequestBodyDto.details;
+        this.img = updateCountdownEventRequestBodyDto.img;
+        this.tsi = updateCountdownEventRequestBodyDto.tsi;
+        this.tsf = updateCountdownEventRequestBodyDto.tsf;
+        this.shareWith = updateCountdownEventRequestBodyDto.shareWith;
     }
 }

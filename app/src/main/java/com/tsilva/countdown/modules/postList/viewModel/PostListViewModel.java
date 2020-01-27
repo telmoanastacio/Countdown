@@ -1,6 +1,7 @@
 package com.tsilva.countdown.modules.postList.viewModel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import androidx.databinding.BaseObservable;
@@ -11,26 +12,34 @@ import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdow
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventsDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdownEvent.PostCountdownEventRequestBodyDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdownEvent.PostCountdownEventResponseBodyDto;
+import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.updateCountdownEvent.UpdateCountdownEventRequestBodyDto;
+import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.updateCountdownEvent.UpdateCountdownEventResponseBodyDto;
 import com.tsilva.countdown.api.requests.get.GetFirebaseRealtimeDBApiClientGetCountdownEvents;
+import com.tsilva.countdown.api.requests.patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.post.PostFirebaseRealtimeDBApiClientPostCountdownEvent;
 import com.tsilva.countdown.api.restClient.ResponseCallback;
+import com.tsilva.countdown.modules.ModulesConfiguration;
+import com.tsilva.countdown.modules.editPost.activity.EditPostActivity;
 import com.tsilva.countdown.modules.postList.activity.PostListActivity;
 import com.tsilva.countdown.modules.postList.viewModel.item.PostItemViewModel;
 import com.tsilva.countdown.modules.postList.viewModel.item.PostItemViewModelComparator;
 import com.tsilva.countdown.modules.postList.viewModel.item.PostItemViewModelComparatorModeEnum;
 import com.tsilva.countdown.modules.postList.viewModel.item.PostItemViewModelFactory;
+import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.persistence.contract.PostsIdToEventMapDto;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
+import com.tsilva.countdown.storage.activity.CurrentActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 
@@ -45,10 +54,13 @@ public final class PostListViewModel extends BaseObservable
     private Context context = null;
     private PersistenceService persistenceService = null;
     private StorageService storageService = null;
+    private UserLoginCredentials userLoginCredentials = null;
     private GetFirebaseRealtimeDBApiClientGetCountdownEvents
             getFirebaseRealtimeDBApiClientGetCountdownEvents = null;
     private PostFirebaseRealtimeDBApiClientPostCountdownEvent
             postFirebaseRealtimeDBApiClientPostCountdownEvent = null;
+    private PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
+            patchFirebaseRealtimeDBApiClientUpdateCountdownEvent = null;
 
     private PostsIdToEventMapDto postsIdToEventMapDto = null;
     @Bindable
@@ -56,43 +68,52 @@ public final class PostListViewModel extends BaseObservable
 
     private PostListViewModel() {}
 
-    public PostListViewModel(
+    PostListViewModel(
             View rootView,
             PostItemViewModelFactory postItemViewModelFactory,
             Context context,
             PersistenceService persistenceService,
             StorageService storageService,
+            UserLoginCredentials userLoginCredentials,
             GetFirebaseRealtimeDBApiClientGetCountdownEvents
                     getFirebaseRealtimeDBApiClientGetCountdownEvents,
             PostFirebaseRealtimeDBApiClientPostCountdownEvent
-                    postFirebaseRealtimeDBApiClientPostCountdownEvent)
+                    postFirebaseRealtimeDBApiClientPostCountdownEvent,
+            PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
+                    patchFirebaseRealtimeDBApiClientUpdateCountdownEvent)
     {
         this.rootView = rootView;
         this.postItemViewModelFactory = postItemViewModelFactory;
         this.context = context;
         this.persistenceService = persistenceService;
         this.storageService = storageService;
+        this.userLoginCredentials = userLoginCredentials;
         this.getFirebaseRealtimeDBApiClientGetCountdownEvents =
                 getFirebaseRealtimeDBApiClientGetCountdownEvents;
         this.postFirebaseRealtimeDBApiClientPostCountdownEvent =
                 postFirebaseRealtimeDBApiClientPostCountdownEvent;
+        this.patchFirebaseRealtimeDBApiClientUpdateCountdownEvent =
+                patchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
+
+        this.storageService.getSharedViewModelManager().setPostListViewModel(this);
 
         setup();
     }
 
-    //TODO: present edit view and save if confirmed
+    public void onDestroy()
+    {
+        this.storageService.getSharedViewModelManager().setPostListViewModel(null);
+    }
+
     public void onNewEventClick(View view)
     {
-        PostCountdownEventRequestBodyDto postCountdownEventRequestBodyDto =
-                new PostCountdownEventRequestBodyDto(
-                        "tberlinera11@hotmail.com",
-                        "Test title 6",
-                        "Test details 6",
-                        "",
-                        new ArrayList<String>(0),
-                        1579859709868L,
-                        1580459709868L);
-        fetchPostCountdownEvent(postCountdownEventRequestBodyDto);
+        CurrentActivity currentActivity =
+                storageService.getActivityManager().getCurrentActivity();
+        Intent editPost =
+                new Intent(currentActivity, EditPostActivity.class);
+        editPost.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        currentActivity.startActivity(editPost);
     }
 
     private void setup()
@@ -114,7 +135,7 @@ public final class PostListViewModel extends BaseObservable
                                     new CountdownEventsDto(new JSONObject(responseBody.string()));
 
                             postsIdToEventMapDto =
-                                    new PostsIdToEventMapDto(countdownEventsDto.postsIdToEventMap);
+                                    new PostsIdToEventMapDto(filteredMap(countdownEventsDto));
 
                             storageService.savePostsIdToEventMapDto(postsIdToEventMapDto);
 
@@ -139,7 +160,7 @@ public final class PostListViewModel extends BaseObservable
                 });
     }
 
-    private void fetchPostCountdownEvent(
+    public void fetchPostCountdownEvent(
             final PostCountdownEventRequestBodyDto postCountdownEventRequestBodyDto)
     {
         if(postCountdownEventRequestBodyDto != null)
@@ -160,8 +181,7 @@ public final class PostListViewModel extends BaseObservable
                             storageService.savePostsIdToEventMapDto(postsIdToEventMapDto);
 
                             populatePostItemListFromMemory();
-//                            postItemList.add(postItemViewModelFactory.create(
-//                                    postCountdownEventResponseBodyDto.name, countdownEventDto));
+
                             storageService.getAdapterManager().notifyAdapters(null);
                         }
 
@@ -175,6 +195,75 @@ public final class PostListViewModel extends BaseObservable
         }
     }
 
+    public void fetchPatchCountdownEvent(
+            final String postId,
+            final UpdateCountdownEventRequestBodyDto updateCountdownEventRequestBodyDto)
+    {
+        if(postId != null && updateCountdownEventRequestBodyDto != null)
+        {
+            patchFirebaseRealtimeDBApiClientUpdateCountdownEvent.execute(
+                    postId,
+                    updateCountdownEventRequestBodyDto,
+                    new ResponseCallback<UpdateCountdownEventResponseBodyDto>()
+                    {
+                        @Override
+                        public void success(UpdateCountdownEventResponseBodyDto
+                                                    updateCountdownEventResponseBodyDto)
+                        {
+                            CountdownEventDto countdownEventDto =
+                                    new CountdownEventDto(updateCountdownEventRequestBodyDto);
+                            postsIdToEventMapDto.postsIdToEventMap.put(
+                                    postId, countdownEventDto);
+
+                            storageService.savePostsIdToEventMapDto(postsIdToEventMapDto);
+
+                            populatePostItemListFromMemory();
+
+                            storageService.getAdapterManager().notifyAdapters(null);
+                        }
+
+                        @Override
+                        public void failure(Throwable t)
+                        {
+                            t.printStackTrace();
+                            System.out.println("Couldn't patch post");
+                        }
+                    });
+        }
+    }
+
+    private Map<String, CountdownEventDto> filteredMap(CountdownEventsDto countdownEventsDto)
+    {
+        if(countdownEventsDto != null && countdownEventsDto.postsIdToEventMap != null)
+        {
+            Map<String, CountdownEventDto> filteredMap = new HashMap<>();
+
+            String currentUserEmail = userLoginCredentials.getEmail();
+
+            for(String key : countdownEventsDto.postsIdToEventMap.keySet())
+            {
+                CountdownEventDto event = countdownEventsDto.postsIdToEventMap.get(key);
+
+                if(event != null)
+                {
+                    if(currentUserEmail.equals(event.email))
+                    {
+                        filteredMap.put(key, event);
+                    }
+
+                    if(event.shareWith.contains(currentUserEmail))
+                    {
+                        filteredMap.put(key, event);
+                    }
+                }
+            }
+
+            return filteredMap;
+        }
+
+        return null;
+    }
+
     private void populatePostItemList(PostsIdToEventMapDto postsIdToEventMapDto)
     {
         if(PostListActivity.isAlive)
@@ -185,11 +274,6 @@ public final class PostListViewModel extends BaseObservable
             {
                 list.add(postItemViewModelFactory
                                  .create(key, postsIdToEventMapDto.postsIdToEventMap.get(key)));
-            }
-
-            if(list.isEmpty())
-            {
-                storageService.getActivityManager().backToLoginScreen();
             }
 
             if(list.size() >= 2)

@@ -61,6 +61,24 @@ public final class ActivityManager
         clearCurrentActivityStack();
     }
 
+    public <T extends CurrentActivity> void changeActivityAndClearCurrent(Class<T> activity)
+    {
+        Intent loginScreen = new Intent(getCurrentActivity(), activity);
+        loginScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        if(currentActivityStack != null)
+        {
+            if(!currentActivityStack.isEmpty())
+            {
+                CurrentActivity currentActivity = currentActivityStack.pop();
+                if(currentActivity != null)
+                {
+                    currentActivity.finishAffinity();
+                }
+            }
+        }
+    }
+
     public void clearCurrentActivityStack()
     {
         if(currentActivityStack != null)

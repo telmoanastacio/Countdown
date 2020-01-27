@@ -1,8 +1,6 @@
 package com.tsilva.countdown.modules.postList.activity;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -10,7 +8,6 @@ import androidx.databinding.DataBindingUtil;
 import com.tsilva.countdown.CountdownApp;
 import com.tsilva.countdown.R;
 import com.tsilva.countdown.databinding.PostListActivityBinding;
-import com.tsilva.countdown.modules.optionsMenu.viewModel.OptionsMenuViewModelFactory;
 import com.tsilva.countdown.modules.postList.viewModel.PostListViewModelFactory;
 import com.tsilva.countdown.modules.postList.viewModel.item.PostItemViewModelFactory;
 import com.tsilva.countdown.services.StorageService;
@@ -25,9 +22,6 @@ import javax.inject.Inject;
 public final class PostListActivity extends CurrentActivity
 {
     public static boolean isAlive = false;
-
-    @Inject
-    Context context;
 
     @Inject
     StorageService storageService;
@@ -59,9 +53,17 @@ public final class PostListActivity extends CurrentActivity
     }
 
     @Override
+    protected void onResume()
+    {
+        setCurrentActivity();
+        super.onResume();
+    }
+
+    @Override
     protected void onDestroy()
     {
         isAlive = false;
+        postListActivityBinding.getViewModel().onDestroy();
         super.onDestroy();
     }
 

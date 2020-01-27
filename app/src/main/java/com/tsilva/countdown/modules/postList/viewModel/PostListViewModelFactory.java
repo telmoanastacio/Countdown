@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.View;
 
 import com.tsilva.countdown.api.requests.get.GetFirebaseRealtimeDBApiClientGetCountdownEvents;
+import com.tsilva.countdown.api.requests.patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.post.PostFirebaseRealtimeDBApiClientPostCountdownEvent;
 import com.tsilva.countdown.modules.postList.viewModel.item.PostItemViewModelFactory;
+import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
 
@@ -18,27 +20,36 @@ public final class PostListViewModelFactory
     private Context context = null;
     private PersistenceService persistenceService = null;
     private StorageService storageService = null;
+    private UserLoginCredentials userLoginCredentials = null;
     private GetFirebaseRealtimeDBApiClientGetCountdownEvents
             getFirebaseRealtimeDBApiClientGetCountdownEvents = null;
     private PostFirebaseRealtimeDBApiClientPostCountdownEvent
             postFirebaseRealtimeDBApiClientPostCountdownEvent = null;
+    private PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
+            patchFirebaseRealtimeDBApiClientUpdateCountdownEvent = null;
 
     public PostListViewModelFactory(
             Context context,
             PersistenceService persistenceService,
             StorageService storageService,
+            UserLoginCredentials userLoginCredentials,
             GetFirebaseRealtimeDBApiClientGetCountdownEvents
                     getFirebaseRealtimeDBApiClientGetCountdownEvents,
             PostFirebaseRealtimeDBApiClientPostCountdownEvent
-                    postFirebaseRealtimeDBApiClientPostCountdownEvent)
+                    postFirebaseRealtimeDBApiClientPostCountdownEvent,
+            PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
+                    patchFirebaseRealtimeDBApiClientUpdateCountdownEvent)
     {
         this.context = context;
         this.persistenceService = persistenceService;
         this.storageService = storageService;
+        this.userLoginCredentials = userLoginCredentials;
         this.getFirebaseRealtimeDBApiClientGetCountdownEvents =
                 getFirebaseRealtimeDBApiClientGetCountdownEvents;
         this.postFirebaseRealtimeDBApiClientPostCountdownEvent =
                 postFirebaseRealtimeDBApiClientPostCountdownEvent;
+        this.patchFirebaseRealtimeDBApiClientUpdateCountdownEvent =
+                patchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
     }
 
     public PostListViewModel create(
@@ -51,7 +62,9 @@ public final class PostListViewModelFactory
                 context,
                 persistenceService,
                 storageService,
+                userLoginCredentials,
                 getFirebaseRealtimeDBApiClientGetCountdownEvents,
-                postFirebaseRealtimeDBApiClientPostCountdownEvent);
+                postFirebaseRealtimeDBApiClientPostCountdownEvent,
+                patchFirebaseRealtimeDBApiClientUpdateCountdownEvent);
     }
 }
