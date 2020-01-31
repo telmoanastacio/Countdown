@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.opengl.Visibility;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;

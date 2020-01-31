@@ -11,7 +11,11 @@ import com.tsilva.countdown.databinding.PostListActivityBinding;
 import com.tsilva.countdown.modules.postList.viewModel.PostListViewModelFactory;
 import com.tsilva.countdown.modules.postList.viewModel.item.PostItemViewModelFactory;
 import com.tsilva.countdown.services.StorageService;
+import com.tsilva.countdown.storage.activity.ActivityManager;
 import com.tsilva.countdown.storage.activity.CurrentActivity;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -53,13 +57,6 @@ public final class PostListActivity extends CurrentActivity
     }
 
     @Override
-    protected void onResume()
-    {
-        setCurrentActivity();
-        super.onResume();
-    }
-
-    @Override
     protected void onDestroy()
     {
         isAlive = false;
@@ -78,7 +75,11 @@ public final class PostListActivity extends CurrentActivity
     {
         try
         {
-            storageService.getActivityManager().setCurrentActivity(this);
+            ActivityManager activityManager = storageService.getActivityManager();
+            List<Class> currentActivityList = new LinkedList<>();
+            currentActivityList.add(PostListActivity.class);
+            activityManager.clearSpecificActivities(currentActivityList);
+            activityManager.setCurrentActivity(this);
         }
         catch(Throwable throwable)
         {

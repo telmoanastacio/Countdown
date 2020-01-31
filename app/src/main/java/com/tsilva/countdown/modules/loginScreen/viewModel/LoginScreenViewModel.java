@@ -33,9 +33,6 @@ import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
 import com.tsilva.countdown.storage.activity.CurrentActivity;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Created by Telmo Silva on 11.12.2019.
  */

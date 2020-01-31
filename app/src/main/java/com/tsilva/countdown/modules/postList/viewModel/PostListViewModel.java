@@ -18,7 +18,6 @@ import com.tsilva.countdown.api.requests.get.GetFirebaseRealtimeDBApiClientGetCo
 import com.tsilva.countdown.api.requests.patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.post.PostFirebaseRealtimeDBApiClientPostCountdownEvent;
 import com.tsilva.countdown.api.restClient.ResponseCallback;
-import com.tsilva.countdown.modules.ModulesConfiguration;
 import com.tsilva.countdown.modules.editPost.activity.EditPostActivity;
 import com.tsilva.countdown.modules.postList.activity.PostListActivity;
 import com.tsilva.countdown.modules.postList.viewModel.item.PostItemViewModel;

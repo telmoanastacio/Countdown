@@ -6,7 +6,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.databinding.ObservableField;
 
@@ -14,6 +13,7 @@ import com.tsilva.countdown.R;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdownEvent.PostCountdownEventRequestBodyDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.updateCountdownEvent.UpdateCountdownEventRequestBodyDto;
+import com.tsilva.countdown.modules.editPost.activity.EditPostActivity;
 import com.tsilva.countdown.modules.postList.activity.PostListActivity;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.StorageService;
@@ -203,14 +203,25 @@ public final class EditPostViewModel
                 }
             }
 
-            storageService.getActivityManager()
-                    .changeActivityAndClearCurrent(PostListActivity.class);
+            List<Class> currentActivityList = new LinkedList<>();
+            currentActivityList.add(EditPostActivity.class);
+            storageService.getActivityManager().changeActivityAndClearSpecificActivities(
+                    PostListActivity.class,
+                    currentActivityList);
+//            storageService.getActivityManager()
+//                    .changeActivityAndClearCurrent(PostListActivity.class);
         }
     }
 
     public void onCancelClick(View view)
     {
-        storageService.getActivityManager().changeActivityAndClearCurrent(PostListActivity.class);
+        List<Class> currentActivityList = new LinkedList<>();
+        currentActivityList.add(EditPostActivity.class);
+        storageService.getActivityManager().changeActivityAndClearSpecificActivities(
+                PostListActivity.class,
+                currentActivityList);
+//            storageService.getActivityManager()
+//                    .changeActivityAndClearCurrent(PostListActivity.class);
     }
 
     public TextWatcher setStartDateTimeTextWatcher()

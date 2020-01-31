@@ -1,18 +1,15 @@
 package com.tsilva.countdown.modules.optionsMenu.viewModel;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 
 import com.tsilva.countdown.api.contract.firebaseAuthApiClient.deleteAccount.DeleteAccountRequestBodyDto;
 import com.tsilva.countdown.api.contract.firebaseAuthApiClient.deleteAccount.DeleteAccountResponseBodyDto;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientDeleteAccount;
 import com.tsilva.countdown.api.restClient.ResponseCallback;
-import com.tsilva.countdown.modules.loginScreen.activity.LoginScreenActivity;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
-import com.tsilva.countdown.storage.activity.CurrentActivity;
 
 /**
  * Created by Telmo Silva on 10.01.2020.
