@@ -1,6 +1,7 @@
 package com.tsilva.countdown.dager.components;
 
 import com.tsilva.countdown.CountdownApp;
+import com.tsilva.countdown.modules.confirmScreen.fragment.ConfirmDialog;
 import com.tsilva.countdown.modules.editPost.activity.EditPostActivity;
 import com.tsilva.countdown.modules.loginScreen.activity.LoginScreenActivity;
 import com.tsilva.countdown.modules.optionsMenu.activity.OptionsMenuActivity;
@@ -17,4 +18,5 @@ public interface ApplicationGraph
     void inject(OptionsMenuActivity optionsMenuActivity);
     void inject(PostListActivity postListActivity);
     void inject(EditPostActivity editPostActivity);
+    void inject(ConfirmDialog confirmDialog);
 }

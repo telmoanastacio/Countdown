@@ -13,14 +13,18 @@ import androidx.databinding.ObservableInt;
 import com.tsilva.countdown.R;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventDto;
 import com.tsilva.countdown.modules.ModulesConfiguration;
+import com.tsilva.countdown.modules.confirmScreen.fragment.ConfirmDialog;
 import com.tsilva.countdown.modules.editPost.activity.EditPostActivity;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
 import com.tsilva.countdown.storage.activity.CurrentActivity;
+import com.tsilva.countdown.storage.dialog.DialogManager;
 import com.tsilva.countdown.storage.status.StatusManager;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Telmo Silva on 22.01.2020.
@@ -28,6 +32,7 @@ import java.util.Date;
 
 public final class PostItemViewModel
 {
+    public PostItemObservables postItemObservables = null;
     private Context context = null;
     private PersistenceService persistenceService = null;
     private StorageService storageService = null;
@@ -36,8 +41,6 @@ public final class PostItemViewModel
     private String postId = null;
     private CountdownEventDto countdownEventDto = null;
     private boolean isOwner = false;
-
-    public PostItemObservables postItemObservables = null;
 
     private PostItemViewModel() {}
 
@@ -123,10 +126,41 @@ public final class PostItemViewModel
         }
     }
 
-    //TODO: show a confirmation dialog
     public void onDeleteClicked(View view)
     {
-        System.out.println("=== CLICKED DELETE ITEM: " + position);
+        final DialogManager dialogManager = storageService.getDialogManager();
+        storageService.getUtilsManager().showConfirmationDialog(
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        List<Class> dialogsToClearList = new LinkedList<>();
+                        dialogsToClearList.add(ConfirmDialog.class);
+                        dialogManager.clearSpecificDialogs(dialogsToClearList);
+
+                        try
+                        {
+                            storageService.getSharedViewModelManager()
+                                    .getPostListViewModel()
+                                    .fetchDeleteCountdownEvent(postId);
+                        }
+                        catch(Throwable throwable)
+                        {
+                            throwable.printStackTrace();
+                        }
+                    }
+                },
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        List<Class> dialogsToClearList = new LinkedList<>();
+                        dialogsToClearList.add(ConfirmDialog.class);
+                        dialogManager.clearSpecificDialogs(dialogsToClearList);
+                    }
+                });
     }
 
     public final class PostItemObservables

@@ -42,13 +42,6 @@ public final class LoginScreenActivity extends CurrentActivity
     @Inject
     LoginScreenViewModelFactory loginScreenViewModelFactory;
 
-    @Inject
-    ImageProcessingService imageProcessingService;
-
-    @Inject
-    DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
-            deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
-
     private LoginScreenActivityBinding loginScreenActivityBinding = null;
 
     @Override
@@ -125,30 +118,6 @@ public final class LoginScreenActivity extends CurrentActivity
                     return;
                 }
             }
-        }
-    }
-
-    private void fetchDeleteCountdownEvent(String postId)
-    {
-        if(postId != null)
-        {
-            deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
-                    .execute(postId,
-                             new ResponseCallback<ResponseBody>()
-            {
-                @Override
-                public void success(ResponseBody responseBody)
-                {
-                    System.out.println();
-                }
-
-                @Override
-                public void failure(Throwable t)
-                {
-                    t.printStackTrace();
-                    System.out.println("Couldn't sign in");
-                }
-            });
         }
     }
 }

@@ -14,6 +14,7 @@ import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdo
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdownEvent.PostCountdownEventResponseBodyDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.updateCountdownEvent.UpdateCountdownEventRequestBodyDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.updateCountdownEvent.UpdateCountdownEventResponseBodyDto;
+import com.tsilva.countdown.api.requests.delete.DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.get.GetFirebaseRealtimeDBApiClientGetCountdownEvents;
 import com.tsilva.countdown.api.requests.patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.post.PostFirebaseRealtimeDBApiClientPostCountdownEvent;
@@ -48,6 +49,8 @@ import okhttp3.ResponseBody;
 
 public final class PostListViewModel extends BaseObservable
 {
+    @Bindable
+    public ObservableArrayList<PostItemViewModel> postItemList = new ObservableArrayList<>();
     private View rootView = null;
     private PostItemViewModelFactory postItemViewModelFactory = null;
     private Context context = null;
@@ -60,12 +63,13 @@ public final class PostListViewModel extends BaseObservable
             postFirebaseRealtimeDBApiClientPostCountdownEvent = null;
     private PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
             patchFirebaseRealtimeDBApiClientUpdateCountdownEvent = null;
-
+    private DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
+            deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent = null;
     private PostsIdToEventMapDto postsIdToEventMapDto = null;
-    @Bindable
-    public ObservableArrayList<PostItemViewModel> postItemList = new ObservableArrayList<>();
 
-    private PostListViewModel() {}
+    private PostListViewModel()
+    {
+    }
 
     PostListViewModel(
             View rootView,
@@ -79,7 +83,9 @@ public final class PostListViewModel extends BaseObservable
             PostFirebaseRealtimeDBApiClientPostCountdownEvent
                     postFirebaseRealtimeDBApiClientPostCountdownEvent,
             PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
-                    patchFirebaseRealtimeDBApiClientUpdateCountdownEvent)
+                    patchFirebaseRealtimeDBApiClientUpdateCountdownEvent,
+            DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
+                    deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent)
     {
         this.rootView = rootView;
         this.postItemViewModelFactory = postItemViewModelFactory;
@@ -93,6 +99,8 @@ public final class PostListViewModel extends BaseObservable
                 postFirebaseRealtimeDBApiClientPostCountdownEvent;
         this.patchFirebaseRealtimeDBApiClientUpdateCountdownEvent =
                 patchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
+        this.deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent =
+                deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 
         this.storageService.getSharedViewModelManager().setPostListViewModel(this);
 
@@ -226,6 +234,36 @@ public final class PostListViewModel extends BaseObservable
                         {
                             t.printStackTrace();
                             System.out.println("Couldn't patch post");
+                        }
+                    });
+        }
+    }
+
+    public void fetchDeleteCountdownEvent(final String postId)
+    {
+        if(postId != null)
+        {
+            deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent.execute(
+                    postId,
+                    new ResponseCallback<ResponseBody>()
+                    {
+                        @Override
+                        public void success(ResponseBody responseBody)
+                        {
+                            postsIdToEventMapDto.postsIdToEventMap.remove(postId);
+
+                            storageService.savePostsIdToEventMapDto(postsIdToEventMapDto);
+
+                            populatePostItemListFromMemory();
+
+                            storageService.getAdapterManager().notifyAdapters(null);
+                        }
+
+                        @Override
+                        public void failure(Throwable t)
+                        {
+                            t.printStackTrace();
+                            System.out.println("Couldn't delete post");
                         }
                     });
         }

@@ -2,6 +2,7 @@ package com.tsilva.countdown.dager.modules;
 
 import android.content.Context;
 
+import com.tsilva.countdown.api.requests.delete.DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.get.GetFirebaseRealtimeDBApiClientGetCountdownEvents;
 import com.tsilva.countdown.api.requests.patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientDeleteAccount;
@@ -10,6 +11,7 @@ import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientPasswordR
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.api.requests.post.PostFirebaseRealtimeDBApiClientPostCountdownEvent;
+import com.tsilva.countdown.modules.confirmScreen.viewModel.ConfirmDialogViewModelFactory;
 import com.tsilva.countdown.modules.editPost.viewModel.EditPostViewModelFactory;
 import com.tsilva.countdown.modules.loginScreen.viewModel.LoginScreenViewModelFactory;
 import com.tsilva.countdown.modules.optionsMenu.viewModel.OptionsMenuViewModelFactory;
@@ -85,7 +87,9 @@ public final class ViewModelsModule
             PostFirebaseRealtimeDBApiClientPostCountdownEvent
                     postFirebaseRealtimeDBApiClientPostCountdownEvent,
             PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
-                    patchFirebaseRealtimeDBApiClientUpdateCountdownEvent)
+                    patchFirebaseRealtimeDBApiClientUpdateCountdownEvent,
+            DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
+                    deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent)
     {
         return new PostListViewModelFactory(
                 context,
@@ -94,7 +98,8 @@ public final class ViewModelsModule
                 userLoginCredentials,
                 getFirebaseRealtimeDBApiClientGetCountdownEvents,
                 postFirebaseRealtimeDBApiClientPostCountdownEvent,
-                patchFirebaseRealtimeDBApiClientUpdateCountdownEvent);
+                patchFirebaseRealtimeDBApiClientUpdateCountdownEvent,
+                deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent);
     }
 
     @Provides
@@ -121,5 +126,11 @@ public final class ViewModelsModule
                 context,
                 storageService,
                 userLoginCredentials);
+    }
+
+    @Provides
+    public ConfirmDialogViewModelFactory provideConfirmDialogViewModelFactory()
+    {
+        return new ConfirmDialogViewModelFactory();
     }
 }

@@ -3,6 +3,7 @@ package com.tsilva.countdown.modules.postList.viewModel;
 import android.content.Context;
 import android.view.View;
 
+import com.tsilva.countdown.api.requests.delete.DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.get.GetFirebaseRealtimeDBApiClientGetCountdownEvents;
 import com.tsilva.countdown.api.requests.patch.PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
 import com.tsilva.countdown.api.requests.post.PostFirebaseRealtimeDBApiClientPostCountdownEvent;
@@ -27,6 +28,8 @@ public final class PostListViewModelFactory
             postFirebaseRealtimeDBApiClientPostCountdownEvent = null;
     private PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
             patchFirebaseRealtimeDBApiClientUpdateCountdownEvent = null;
+    private DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
+            deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent = null;
 
     public PostListViewModelFactory(
             Context context,
@@ -38,7 +41,9 @@ public final class PostListViewModelFactory
             PostFirebaseRealtimeDBApiClientPostCountdownEvent
                     postFirebaseRealtimeDBApiClientPostCountdownEvent,
             PatchFirebaseRealtimeDBApiClientUpdateCountdownEvent
-                    patchFirebaseRealtimeDBApiClientUpdateCountdownEvent)
+                    patchFirebaseRealtimeDBApiClientUpdateCountdownEvent,
+            DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent
+                    deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent)
     {
         this.context = context;
         this.persistenceService = persistenceService;
@@ -50,6 +55,8 @@ public final class PostListViewModelFactory
                 postFirebaseRealtimeDBApiClientPostCountdownEvent;
         this.patchFirebaseRealtimeDBApiClientUpdateCountdownEvent =
                 patchFirebaseRealtimeDBApiClientUpdateCountdownEvent;
+        this.deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent =
+                deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
     }
 
     public PostListViewModel create(
@@ -65,6 +72,7 @@ public final class PostListViewModelFactory
                 userLoginCredentials,
                 getFirebaseRealtimeDBApiClientGetCountdownEvents,
                 postFirebaseRealtimeDBApiClientPostCountdownEvent,
-                patchFirebaseRealtimeDBApiClientUpdateCountdownEvent);
+                patchFirebaseRealtimeDBApiClientUpdateCountdownEvent,
+                deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent);
     }
 }

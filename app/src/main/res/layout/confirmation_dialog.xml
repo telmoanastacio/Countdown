@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.tsilva.countdown.modules.confirmScreen.viewModel.ConfirmDialogViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/regularPaddingSize"
+            android:paddingTop="@dimen/regularPaddingSize"
+            android:paddingRight="@dimen/regularPaddingSize"
+            android:paddingBottom="@dimen/regularPaddingSize"
+            android:orientation="horizontal"
+            android:gravity="top" >
+
+            <Button
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/confirm"
+                android:OnClickListener="@{viewModel.positiveOnClickListener}" />
+
+            <Button
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:OnClickListener="@{viewModel.negativeOnClickListener}" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

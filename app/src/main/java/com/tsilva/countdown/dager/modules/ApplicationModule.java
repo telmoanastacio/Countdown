@@ -13,6 +13,7 @@ import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
 import com.tsilva.countdown.storage.activity.ActivityManager;
 import com.tsilva.countdown.storage.adapter.AdapterManager;
+import com.tsilva.countdown.storage.dialog.DialogManager;
 import com.tsilva.countdown.storage.sharedViewModel.SharedViewModelManager;
 import com.tsilva.countdown.storage.status.StatusManager;
 import com.tsilva.countdown.storage.utils.UtilsManager;
@@ -105,13 +106,20 @@ public final class ApplicationModule
     }
 
     @Provides
+    public DialogManager providesDialogManager()
+    {
+        return DialogManager.dialogManagerInstance();
+    }
+
+    @Provides
     public StorageService provideStorageService(
             PersistenceService persistenceService,
             ActivityManager activityManager,
             AdapterManager adapterManager,
             SharedViewModelManager sharedViewModelManager,
             StatusManager statusManager,
-            UtilsManager utilsManager
+            UtilsManager utilsManager,
+            DialogManager dialogManager
     )
     {
         StorageService storageService = StorageService.storageServiceInstance();
@@ -121,7 +129,8 @@ public final class ApplicationModule
                 adapterManager,
                 sharedViewModelManager,
                 statusManager,
-                utilsManager);
+                utilsManager,
+                dialogManager);
         return storageService;
     }
 

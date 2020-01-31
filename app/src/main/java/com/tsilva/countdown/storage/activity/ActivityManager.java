@@ -70,18 +70,15 @@ public final class ActivityManager
 
         currentActivity.startActivity(changeToActivity);
 
-        if(currentActivityList != null)
+        if(currentActivityList != null && !currentActivityList.isEmpty())
         {
-            if(!currentActivityList.isEmpty())
+            int index = currentActivityList.size() - 1;
+            CurrentActivity currentActivityListItem = currentActivityList.get(index);
+            if(currentActivityListItem != null)
             {
-                int index = currentActivityList.size() - 1;
-                CurrentActivity currentActivityListItem = currentActivityList.get(index);
-                if(currentActivityListItem != null)
-                {
-                    currentActivityListItem.finishAffinity();
-                    currentActivityListItem = null;
-                    currentActivityList.remove(index);
-                }
+                currentActivityListItem.finishAffinity();
+                currentActivityListItem = null;
+                currentActivityList.remove(index);
             }
         }
     }
@@ -101,19 +98,16 @@ public final class ActivityManager
 
     public <T extends CurrentActivity> void clearSpecificActivities(List<Class> clearActivities)
     {
-        if(currentActivityList != null)
+        if(currentActivityList != null && !currentActivityList.isEmpty())
         {
-            if(!currentActivityList.isEmpty())
+            for(int i = currentActivityList.size() - 1; i >= 0; i--)
             {
-                for(int i = currentActivityList.size() - 1; i >= 0; i--)
+                CurrentActivity currentActivityListItem = currentActivityList.get(i);
+                if(clearActivities.contains(currentActivityListItem.getClass()))
                 {
-                    CurrentActivity currentActivityListItem = currentActivityList.get(i);
-                    if(clearActivities.contains(currentActivityListItem.getClass()))
-                    {
-                        currentActivityListItem.finishAffinity();
-                        currentActivityListItem = null;
-                        currentActivityList.remove(i);
-                    }
+                    currentActivityListItem.finishAffinity();
+                    currentActivityListItem = null;
+                    currentActivityList.remove(i);
                 }
             }
         }
