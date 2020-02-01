@@ -128,39 +128,42 @@ public final class PostItemViewModel
 
     public void onDeleteClicked(View view)
     {
-        final DialogManager dialogManager = storageService.getDialogManager();
-        storageService.getUtilsManager().showConfirmationDialog(
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
+        if(isOwner)
+        {
+            final DialogManager dialogManager = storageService.getDialogManager();
+            storageService.getUtilsManager().showConfirmationDialog(
+                    new View.OnClickListener()
                     {
-                        List<Class> dialogsToClearList = new LinkedList<>();
-                        dialogsToClearList.add(ConfirmDialog.class);
-                        dialogManager.clearSpecificDialogs(dialogsToClearList);
+                        @Override
+                        public void onClick(View v)
+                        {
+                            List<Class> dialogsToClearList = new LinkedList<>();
+                            dialogsToClearList.add(ConfirmDialog.class);
+                            dialogManager.clearSpecificDialogs(dialogsToClearList);
 
-                        try
-                        {
-                            storageService.getSharedViewModelManager()
-                                    .getPostListViewModel()
-                                    .fetchDeleteCountdownEvent(postId);
+                            try
+                            {
+                                storageService.getSharedViewModelManager()
+                                        .getPostListViewModel()
+                                        .fetchDeleteCountdownEvent(postId);
+                            }
+                            catch(Throwable throwable)
+                            {
+                                throwable.printStackTrace();
+                            }
                         }
-                        catch(Throwable throwable)
-                        {
-                            throwable.printStackTrace();
-                        }
-                    }
-                },
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
+                    },
+                    new View.OnClickListener()
                     {
-                        List<Class> dialogsToClearList = new LinkedList<>();
-                        dialogsToClearList.add(ConfirmDialog.class);
-                        dialogManager.clearSpecificDialogs(dialogsToClearList);
-                    }
-                });
+                        @Override
+                        public void onClick(View v)
+                        {
+                            List<Class> dialogsToClearList = new LinkedList<>();
+                            dialogsToClearList.add(ConfirmDialog.class);
+                            dialogManager.clearSpecificDialogs(dialogsToClearList);
+                        }
+                    });
+        }
     }
 
     public final class PostItemObservables

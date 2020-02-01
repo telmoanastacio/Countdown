@@ -61,6 +61,7 @@ public final class PostListActivity extends CurrentActivity
     {
         isAlive = false;
         postListActivityBinding.getViewModel().onDestroy();
+        storageService.getActivityManager().clearActivityByObject(this);
         super.onDestroy();
     }
 

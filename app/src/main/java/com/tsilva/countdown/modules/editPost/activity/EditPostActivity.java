@@ -68,6 +68,7 @@ public final class EditPostActivity extends CurrentActivity
     protected void onDestroy()
     {
         isAlive = false;
+        storageService.getActivityManager().clearActivityByObject(this);
         super.onDestroy();
     }
 

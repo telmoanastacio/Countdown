@@ -96,17 +96,41 @@ public final class ActivityManager
         clearSpecificActivities(clearActivities);
     }
 
-    public <T extends CurrentActivity> void clearSpecificActivities(List<Class> clearActivities)
+    public <T extends CurrentActivity> void clearActivityByObject(T activity)
+    {
+        if(currentActivityList != null && !currentActivityList.isEmpty())
+        {
+            for(int i = currentActivityList.size() - 1; i >= 0; i--)
+            {
+                CurrentActivity currentActivity = currentActivityList.get(i);
+                if(currentActivity == null || currentActivity.equals(activity))
+                {
+                    if(currentActivity != null)
+                    {
+                        currentActivity.finishAffinity();
+                        currentActivity = null;
+                    }
+                    currentActivityList.remove(i);
+                }
+            }
+        }
+    }
+
+    public void clearSpecificActivities(List<Class> clearActivities)
     {
         if(currentActivityList != null && !currentActivityList.isEmpty())
         {
             for(int i = currentActivityList.size() - 1; i >= 0; i--)
             {
                 CurrentActivity currentActivityListItem = currentActivityList.get(i);
-                if(clearActivities.contains(currentActivityListItem.getClass()))
+                if(currentActivityListItem == null
+                        || clearActivities.contains(currentActivityListItem.getClass()))
                 {
-                    currentActivityListItem.finishAffinity();
-                    currentActivityListItem = null;
+                    if(currentActivity != null)
+                    {
+                        currentActivity.finishAffinity();
+                        currentActivity = null;
+                    }
                     currentActivityList.remove(i);
                 }
             }
