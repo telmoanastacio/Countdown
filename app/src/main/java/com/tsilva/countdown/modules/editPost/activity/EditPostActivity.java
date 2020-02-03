@@ -90,4 +90,11 @@ public final class EditPostActivity extends CurrentActivity
             throwable.printStackTrace();
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        editPostActivityBinding.getViewModel().onActivityResult(requestCode, resultCode, data);
+    }
 }

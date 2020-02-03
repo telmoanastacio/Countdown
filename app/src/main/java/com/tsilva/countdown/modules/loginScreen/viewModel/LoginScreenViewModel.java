@@ -2,10 +2,12 @@ package com.tsilva.countdown.modules.loginScreen.viewModel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 

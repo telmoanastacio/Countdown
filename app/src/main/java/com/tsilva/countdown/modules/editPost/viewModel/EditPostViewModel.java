@@ -1,9 +1,15 @@
 package com.tsilva.countdown.modules.editPost.viewModel;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 
@@ -20,6 +26,9 @@ import com.tsilva.countdown.services.StorageService;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,6 +45,8 @@ import javax.annotation.Nullable;
 
 public final class EditPostViewModel
 {
+    public static final int IMAGE_PICK_REQUEST_CODE = 9020;
+
     private boolean isEdit = false;
     private Context context = null;
     private StorageService storageService = null;
@@ -138,6 +149,37 @@ public final class EditPostViewModel
                 String str = storageService.getUtilsManager().buildShareListString(shareList);
                 editPostObservables.shareTextContent.set(str);
             }
+
+            String base64Img = countdownEventDto.img;
+            if(base64Img != null)
+            {
+                ByteArrayInputStream inputStream = null;
+                try
+                {
+                    byte[] imageBytes = Base64.decode(base64Img, Base64.DEFAULT);
+                    inputStream = new ByteArrayInputStream(imageBytes);
+                    Drawable drawable = Drawable.createFromStream(inputStream, null);
+                    editPostObservables.imageViewDrawable.set(drawable);
+                }
+                catch(IllegalArgumentException e)
+                {
+                    e.printStackTrace();
+                }
+                finally
+                {
+                    if(inputStream != null)
+                    {
+                        try
+                        {
+                            inputStream.close();
+                        }
+                        catch(IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -148,14 +190,19 @@ public final class EditPostViewModel
 
     public void onImageClick(View view)
     {
-        System.out.println("=== ::onImageClick");
+        Intent pickPhoto = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        storageService.getActivityManager().getCurrentActivity()
+                .startActivityForResult(pickPhoto , IMAGE_PICK_REQUEST_CODE);
     }
 
-    //TODO: give support to image
     public void onConfirmClick(View view)
     {
         if(validate(new Date()))
         {
+            String img = (countdownEventDto == null || countdownEventDto.img == null)
+                    ? "" : countdownEventDto.img;
             if(!isEdit)
             {
                 PostCountdownEventRequestBodyDto postCountdownEventRequestBodyDto =
@@ -163,7 +210,7 @@ public final class EditPostViewModel
                                 userLoginCredentials.getEmail(),
                                 editPostObservables.titleTextContent.get(),
                                 editPostObservables.detailsTextContent.get(),
-                                "",
+                                img,
                                 emailList,
                                 dateTsi.getTime(),
                                 dateTsf.getTime());
@@ -186,7 +233,7 @@ public final class EditPostViewModel
                                 userLoginCredentials.getEmail(),
                                 editPostObservables.titleTextContent.get(),
                                 editPostObservables.detailsTextContent.get(),
-                                "",
+                                img,
                                 emailList,
                                 dateTsi.getTime(),
                                 dateTsf.getTime());
@@ -208,8 +255,6 @@ public final class EditPostViewModel
             storageService.getActivityManager().changeActivityAndClearSpecificActivities(
                     PostListActivity.class,
                     currentActivityList);
-//            storageService.getActivityManager()
-//                    .changeActivityAndClearCurrent(PostListActivity.class);
         }
     }
 
@@ -220,8 +265,6 @@ public final class EditPostViewModel
         storageService.getActivityManager().changeActivityAndClearSpecificActivities(
                 PostListActivity.class,
                 currentActivityList);
-//            storageService.getActivityManager()
-//                    .changeActivityAndClearCurrent(PostListActivity.class);
     }
 
     public TextWatcher setStartDateTimeTextWatcher()
@@ -277,6 +320,37 @@ public final class EditPostViewModel
                 }
             }
         };
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        if(requestCode == IMAGE_PICK_REQUEST_CODE && data != null)
+        {
+            Uri uri = data.getData();
+
+            try
+            {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+                        context.getContentResolver(),
+                        uri);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
+                byte[] bytes = byteArrayOutputStream.toByteArray();
+                countdownEventDto.img = Base64.encodeToString(bytes, Base64.DEFAULT);
+                if(countdownEventDto.img == null)
+                {
+                    countdownEventDto.img = "";
+                }
+
+                editPostObservables.imageViewDrawable.set(new BitmapDrawable(
+                        context.getResources(),
+                        bitmap));
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean validate(Date now)

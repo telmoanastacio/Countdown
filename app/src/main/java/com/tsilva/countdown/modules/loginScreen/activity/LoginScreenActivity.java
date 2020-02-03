@@ -9,19 +9,14 @@ import androidx.databinding.DataBindingUtil;
 
 import com.tsilva.countdown.CountdownApp;
 import com.tsilva.countdown.R;
-import com.tsilva.countdown.api.requests.delete.DeleteFirebaseRealtimeDBApiClientUpdateCountdownEvent;
-import com.tsilva.countdown.api.restClient.ResponseCallback;
 import com.tsilva.countdown.databinding.LoginScreenActivityBinding;
 import com.tsilva.countdown.modules.loginScreen.viewModel.LoginScreenViewModelFactory;
-import com.tsilva.countdown.services.ImageProcessingService;
 import com.tsilva.countdown.services.PermissionsService;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
 import com.tsilva.countdown.storage.activity.CurrentActivity;
 
 import javax.inject.Inject;
-
-import okhttp3.ResponseBody;
 
 public final class LoginScreenActivity extends CurrentActivity
 {
@@ -99,9 +94,8 @@ public final class LoginScreenActivity extends CurrentActivity
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults)
     {
-        handleRequestPermissionsResult(requestCode, permissions, grantResults);
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        handleRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void handleRequestPermissionsResult(int requestCode,

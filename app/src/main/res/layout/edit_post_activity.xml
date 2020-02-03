@@ -122,7 +122,7 @@
                             android:layout_height="match_parent"
                             android:text="@string/image"
                             android:textSize="@dimen/regularTextSize"
-                            android:enabled="false"
+                            android:enabled="true"
                             android:onClick="@{viewModel::onImageClick}" />
 
                         <Button
