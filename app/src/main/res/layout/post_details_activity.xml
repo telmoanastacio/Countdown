@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.tsilva.countdown.modules.detailsScreen.viewModel.PostDetailsViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/regularPaddingSize"
+            android:paddingTop="@dimen/regularPaddingSize"
+            android:paddingRight="@dimen/regularPaddingSize"
+            android:paddingBottom="@dimen/regularPaddingSize"
+            android:orientation="vertical"
+            android:gravity="center" >
+
+            <RelativeLayout
+                android:layout_weight="0.6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@{viewModel.postDetailsObservables.imageViewDrawable}"
+                    android:layout_marginBottom="@dimen/regularPaddingSize"
+                    android:windowSoftInputMode="adjustNothing"
+                    tools:src="@color/colorPrimary" />
+
+            </RelativeLayout>
+
+            <ScrollView
+                android:layout_weight="0.4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/regularEditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.postDetailsObservables.titleTextContent}"
+                        android:gravity="left"
+                        tools:text="@string/title" >
+
+                        <requestFocus />
+
+                    </TextView>
+
+                    <TextView
+                        style="@style/regularEditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minLines="4"
+                        android:text="@{viewModel.postDetailsObservables.detailsTextContent}"
+                        android:gravity="left"
+                        tools:text="@string/details"/>
+
+                    <TextView
+                        style="@style/regularEditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.postDetailsObservables.tsiTextContent}"
+                        android:gravity="left"
+                        tools:text="@string/details_tsi" />
+
+                    <TextView
+                        style="@style/regularEditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.postDetailsObservables.tsfTextContent}"
+                        android:gravity="left"
+                        tools:text="@string/details_tsf" />
+
+                    <TextView
+                        style="@style/regularEditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.postDetailsObservables.remainingTextContent}"
+                        android:gravity="left"
+                        tools:text="@string/remaining" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/regularPaddingSize"
+            android:layout_marginTop="@dimen/regularPaddingSize"
+            android:layout_marginRight="@dimen/regularPaddingSize"
+            android:layout_marginBottom="@dimen/regularPaddingSize"
+            android:layout_alignParentBottom="true"
+            android:text="@string/dismiss"
+            android:textSize="@dimen/regularTextSize"
+            android:onClick="@{viewModel::onDismissClick}" />
+
+    </RelativeLayout>
+
+</layout>

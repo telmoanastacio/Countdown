@@ -35,4 +35,11 @@
     <string name="image">Add image</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+
+    <string name="details_tsi">Start</string>
+    <string name="details_tsf">End</string>
+    <string name="remaining">Remaining time</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="day">d</string>
+    <string name="hour">h</string>
 </resources>

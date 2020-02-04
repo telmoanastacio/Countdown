@@ -14,6 +14,7 @@ import com.tsilva.countdown.R;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventDto;
 import com.tsilva.countdown.modules.ModulesConfiguration;
 import com.tsilva.countdown.modules.confirmScreen.fragment.ConfirmDialog;
+import com.tsilva.countdown.modules.detailsScreen.activity.PostDetailsActivity;
 import com.tsilva.countdown.modules.editPost.activity.EditPostActivity;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.PersistenceService;
@@ -104,10 +105,16 @@ public final class PostItemViewModel
         }
     }
 
-    //TODO: send to the details view
     public void onItemClicked(View view)
     {
-        System.out.println("=== CLICKED ITEM: " + position);
+        CurrentActivity currentActivity =
+                storageService.getActivityManager().getCurrentActivity();
+        Intent postDetails =
+                new Intent(currentActivity, PostDetailsActivity.class);
+        postDetails.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        postDetails.putExtra(ModulesConfiguration.COUNTDOWN_EVENT_DTO, countdownEventDto);
+
+        currentActivity.startActivity(postDetails);
     }
 
     public void onEditClicked(View view)

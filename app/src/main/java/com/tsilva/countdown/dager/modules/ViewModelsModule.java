@@ -12,6 +12,7 @@ import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.api.requests.post.PostFirebaseRealtimeDBApiClientPostCountdownEvent;
 import com.tsilva.countdown.modules.confirmScreen.viewModel.ConfirmDialogViewModelFactory;
+import com.tsilva.countdown.modules.detailsScreen.viewModel.PostDetailsViewModelFactory;
 import com.tsilva.countdown.modules.editPost.viewModel.EditPostViewModelFactory;
 import com.tsilva.countdown.modules.loginScreen.viewModel.LoginScreenViewModelFactory;
 import com.tsilva.countdown.modules.optionsMenu.viewModel.OptionsMenuViewModelFactory;
@@ -132,5 +133,15 @@ public final class ViewModelsModule
     public ConfirmDialogViewModelFactory provideConfirmDialogViewModelFactory()
     {
         return new ConfirmDialogViewModelFactory();
+    }
+
+    @Provides
+    public PostDetailsViewModelFactory providePostDetailsViewModelFactory(
+            Context context,
+            StorageService storageService)
+    {
+        return new PostDetailsViewModelFactory(
+                context,
+                storageService);
     }
 }
