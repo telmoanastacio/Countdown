@@ -36,6 +36,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,8 +50,6 @@ import okhttp3.ResponseBody;
 
 public final class PostListViewModel extends BaseObservable
 {
-    @Bindable
-    public ObservableArrayList<PostItemViewModel> postItemList = new ObservableArrayList<>();
     private View rootView = null;
     private PostItemViewModelFactory postItemViewModelFactory = null;
     private Context context = null;
@@ -67,9 +66,10 @@ public final class PostListViewModel extends BaseObservable
             deleteFirebaseRealtimeDBApiClientUpdateCountdownEvent = null;
     private PostsIdToEventMapDto postsIdToEventMapDto = null;
 
-    private PostListViewModel()
-    {
-    }
+    @Bindable
+    public ObservableArrayList<PostItemViewModel> postItemList = new ObservableArrayList<>();
+
+    private PostListViewModel() {}
 
     PostListViewModel(
             View rootView,
@@ -140,6 +140,8 @@ public final class PostListViewModel extends BaseObservable
                         {
                             CountdownEventsDto countdownEventsDto =
                                     new CountdownEventsDto(new JSONObject(responseBody.string()));
+
+                            countdownEventsDto = deleteOldPosts(countdownEventsDto);
 
                             postsIdToEventMapDto =
                                     new PostsIdToEventMapDto(filteredMap(countdownEventsDto));
@@ -267,6 +269,39 @@ public final class PostListViewModel extends BaseObservable
                         }
                     });
         }
+    }
+
+    private CountdownEventsDto deleteOldPosts(CountdownEventsDto countdownEventsDto)
+    {
+        Date now = new Date();
+
+        if(countdownEventsDto != null && countdownEventsDto.postsIdToEventMap != null)
+        {
+            Map<String, CountdownEventDto> upToDateCountdownEventDtoMap = new HashMap<>();
+
+            for(String key : countdownEventsDto.postsIdToEventMap.keySet())
+            {
+                CountdownEventDto event = countdownEventsDto.postsIdToEventMap.get(key);
+
+                if(event != null)
+                {
+                    Date tsfDate = new Date(event.tsf);
+                    if(now.after(tsfDate))
+                    {
+                        fetchDeleteCountdownEvent(key);
+                    }
+                    else
+                    {
+                        upToDateCountdownEventDtoMap.put(key, event);
+                    }
+                }
+            }
+            countdownEventsDto.postsIdToEventMap = upToDateCountdownEventDtoMap;
+
+            return countdownEventsDto;
+        }
+
+        return null;
     }
 
     private Map<String, CountdownEventDto> filteredMap(CountdownEventsDto countdownEventsDto)
