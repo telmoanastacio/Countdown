@@ -95,4 +95,24 @@ public final class DialogManager
             }
         }
     }
+
+    public void clearDialogByObject(Object dialog)
+    {
+        if(dialog == null)
+        {
+            return;
+        }
+
+        // DialogFragment
+        if(DialogFragment.class.isAssignableFrom(dialog.getClass()))
+        {
+            if(dialogFragmentList != null && !dialogFragmentList.isEmpty())
+            {
+                DialogFragment dialogFragment = (DialogFragment) dialog;
+                dialogFragment.dismissAllowingStateLoss();
+                dialogFragmentList.remove(dialogFragment);
+                dialog = null;
+            }
+        }
+    }
 }

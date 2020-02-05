@@ -91,6 +91,7 @@ public final class ConfirmDialog extends DialogFragment implements CurrentDialog
     public void onDetach()
     {
         isAlive = false;
+        storageService.getDialogManager().clearDialogByObject(this);
         super.onDetach();
     }
 

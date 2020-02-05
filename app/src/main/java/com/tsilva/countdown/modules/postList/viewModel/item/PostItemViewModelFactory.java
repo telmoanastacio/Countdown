@@ -3,7 +3,6 @@ package com.tsilva.countdown.modules.postList.viewModel.item;
 import android.content.Context;
 
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventDto;
-import com.tsilva.countdown.modules.confirmScreen.viewModel.ConfirmDialogViewModelFactory;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.PersistenceService;
 import com.tsilva.countdown.services.StorageService;
