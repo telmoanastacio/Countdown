@@ -184,8 +184,20 @@ public final class PostListViewModel extends BaseObservable
                         {
                             CountdownEventDto countdownEventDto =
                                     new CountdownEventDto(postCountdownEventRequestBodyDto);
-                            postsIdToEventMapDto.postsIdToEventMap.put(
-                                    postCountdownEventResponseBodyDto.name, countdownEventDto);
+
+                            if(postsIdToEventMapDto != null
+                                    && postsIdToEventMapDto.postsIdToEventMap != null)
+                            {
+                                postsIdToEventMapDto.postsIdToEventMap.put(
+                                        postCountdownEventResponseBodyDto.name, countdownEventDto);
+                            }
+                            else
+                            {
+                                Map<String, CountdownEventDto> postsIdToEventMap = new HashMap<>();
+                                postsIdToEventMap.put(
+                                        postCountdownEventResponseBodyDto.name, countdownEventDto);
+                                postsIdToEventMapDto = new PostsIdToEventMapDto(postsIdToEventMap);
+                            }
 
                             storageService.savePostsIdToEventMapDto(postsIdToEventMapDto);
 
