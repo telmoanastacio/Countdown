@@ -18,7 +18,6 @@ public final class PostListViewBindings
     @BindingAdapter({"bind:items"})
     public static void setItems(ListView listView, List<PostItemViewModel> items)
     {
-        //write your code to set ListView adapter.
         if(items != null && !items.isEmpty())
         {
             PostListViewAdapter postListViewAdapter = new PostListViewAdapter(

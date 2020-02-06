@@ -13,15 +13,11 @@ import androidx.databinding.ObservableField;
 
 import com.tsilva.countdown.R;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventDto;
-import com.tsilva.countdown.modules.detailsScreen.activity.PostDetailsActivity;
-import com.tsilva.countdown.modules.postList.activity.PostListActivity;
 import com.tsilva.countdown.services.StorageService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
@@ -160,11 +156,7 @@ public final class PostDetailsViewModel
 
     public void onDismissClick(View view)
     {
-        List<Class> currentActivityList = new LinkedList<>();
-        currentActivityList.add(PostDetailsActivity.class);
-        storageService.getActivityManager().changeActivityAndClearSpecificActivities(
-                PostListActivity.class,
-                currentActivityList);
+        storageService.getActivityManager().getCurrentActivity().finishAffinity();
     }
 
     /**

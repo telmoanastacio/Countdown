@@ -1,7 +1,6 @@
 package com.tsilva.countdown.modules.loginScreen.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 

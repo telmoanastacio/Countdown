@@ -118,7 +118,7 @@ public final class PostListViewModel extends BaseObservable
                 storageService.getActivityManager().getCurrentActivity();
         Intent editPost =
                 new Intent(currentActivity, EditPostActivity.class);
-        editPost.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        editPost.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         currentActivity.startActivity(editPost);
     }

@@ -111,7 +111,7 @@ public final class LoginScreenViewModel
     {
         CurrentActivity currentActivity = storageService.getActivityManager().getCurrentActivity();
         Intent optionMenu = new Intent(currentActivity, OptionsMenuActivity.class);
-        optionMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        optionMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         currentActivity.startActivity(optionMenu);
     }
@@ -295,7 +295,8 @@ public final class LoginScreenViewModel
                                         storageService.getActivityManager().getCurrentActivity();
                                 Intent postList =
                                         new Intent(currentActivity, PostListActivity.class);
-                                postList.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                postList.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                          | Intent.FLAG_ACTIVITY_NEW_TASK);
 
                                 currentActivity.startActivity(postList);
 

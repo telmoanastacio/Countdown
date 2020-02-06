@@ -111,7 +111,7 @@ public final class PostItemViewModel
                 storageService.getActivityManager().getCurrentActivity();
         Intent postDetails =
                 new Intent(currentActivity, PostDetailsActivity.class);
-        postDetails.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        postDetails.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         postDetails.putExtra(ModulesConfiguration.COUNTDOWN_EVENT_DTO, countdownEventDto);
 
         currentActivity.startActivity(postDetails);
@@ -125,7 +125,7 @@ public final class PostItemViewModel
                     storageService.getActivityManager().getCurrentActivity();
             Intent editPost =
                     new Intent(currentActivity, EditPostActivity.class);
-            editPost.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            editPost.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             editPost.putExtra(ModulesConfiguration.POST_ID, postId);
             editPost.putExtra(ModulesConfiguration.COUNTDOWN_EVENT_DTO, countdownEventDto);
 

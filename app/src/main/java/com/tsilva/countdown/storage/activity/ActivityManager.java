@@ -55,45 +55,11 @@ public final class ActivityManager
     {
         CurrentActivity currentActivity = getCurrentActivity();
         Intent loginScreen = new Intent(currentActivity, LoginScreenActivity.class);
-        loginScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        loginScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         currentActivity.startActivity(loginScreen);
 
         clearCurrentActivityStack();
-    }
-
-    public <T extends CurrentActivity> void changeActivityAndClearCurrent(Class<T> activity)
-    {
-        CurrentActivity currentActivity = getCurrentActivity();
-        Intent changeToActivity = new Intent(currentActivity, activity);
-        changeToActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        currentActivity.startActivity(changeToActivity);
-
-        if(currentActivityList != null && !currentActivityList.isEmpty())
-        {
-            int index = currentActivityList.size() - 1;
-            CurrentActivity currentActivityListItem = currentActivityList.get(index);
-            if(currentActivityListItem != null)
-            {
-                currentActivityListItem.finishAffinity();
-                currentActivityListItem = null;
-                currentActivityList.remove(index);
-            }
-        }
-    }
-
-    public <T extends CurrentActivity> void changeActivityAndClearSpecificActivities(
-            Class<T> changeTo,
-            List<Class> clearActivities)
-    {
-        CurrentActivity currentActivity = getCurrentActivity();
-        Intent changeToActivity = new Intent(currentActivity, changeTo);
-        changeToActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        currentActivity.startActivity(changeToActivity);
-
-        clearSpecificActivities(clearActivities);
     }
 
     public <T extends CurrentActivity> void clearActivityByObject(T activity)
@@ -104,27 +70,6 @@ public final class ActivityManager
             {
                 CurrentActivity currentActivity = currentActivityList.get(i);
                 if(currentActivity == null || currentActivity.equals(activity))
-                {
-                    if(currentActivity != null)
-                    {
-                        currentActivity.finishAffinity();
-                        currentActivity = null;
-                    }
-                    currentActivityList.remove(i);
-                }
-            }
-        }
-    }
-
-    public void clearSpecificActivities(List<Class> clearActivities)
-    {
-        if(currentActivityList != null && !currentActivityList.isEmpty())
-        {
-            for(int i = currentActivityList.size() - 1; i >= 0; i--)
-            {
-                CurrentActivity currentActivityListItem = currentActivityList.get(i);
-                if(currentActivityListItem == null
-                        || clearActivities.contains(currentActivityListItem.getClass()))
                 {
                     if(currentActivity != null)
                     {

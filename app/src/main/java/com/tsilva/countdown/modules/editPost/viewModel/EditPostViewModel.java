@@ -19,8 +19,6 @@ import com.tsilva.countdown.R;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.getCountdownEvent.CountdownEventDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.postCountdownEvent.PostCountdownEventRequestBodyDto;
 import com.tsilva.countdown.api.contract.firebaseRealtimeDBApiClient.updateCountdownEvent.UpdateCountdownEventRequestBodyDto;
-import com.tsilva.countdown.modules.editPost.activity.EditPostActivity;
-import com.tsilva.countdown.modules.postList.activity.PostListActivity;
 import com.tsilva.countdown.persistence.UserLoginCredentials;
 import com.tsilva.countdown.services.StorageService;
 
@@ -61,8 +59,8 @@ public final class EditPostViewModel
 
     public EditPostObservables editPostObservables = null;
 
-    public EditText editTextTsi = null;
-    public EditText editTextTsf = null;
+    private EditText editTextTsi = null;
+    private EditText editTextTsf = null;
 
     private EditPostViewModel() {}
 
@@ -190,9 +188,14 @@ public final class EditPostViewModel
 
     public void onImageClick(View view)
     {
-        Intent pickPhoto = new Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        // TODO: review
+        Intent pickPhoto = new Intent();
+        pickPhoto.setType("image/*");
+        pickPhoto.setAction(Intent.ACTION_GET_CONTENT);
+        pickPhoto.putExtra("return-data", true);
+//        Intent pickPhoto = new Intent(
+//                Intent.ACTION_PICK,
+//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         storageService.getActivityManager().getCurrentActivity()
                 .startActivityForResult(pickPhoto , IMAGE_PICK_REQUEST_CODE);
     }
@@ -250,21 +253,13 @@ public final class EditPostViewModel
                 }
             }
 
-            List<Class> currentActivityList = new LinkedList<>();
-            currentActivityList.add(EditPostActivity.class);
-            storageService.getActivityManager().changeActivityAndClearSpecificActivities(
-                    PostListActivity.class,
-                    currentActivityList);
+            onCancelClick(null);
         }
     }
 
     public void onCancelClick(View view)
     {
-        List<Class> currentActivityList = new LinkedList<>();
-        currentActivityList.add(EditPostActivity.class);
-        storageService.getActivityManager().changeActivityAndClearSpecificActivities(
-                PostListActivity.class,
-                currentActivityList);
+        storageService.getActivityManager().getCurrentActivity().finishAffinity();
     }
 
     public TextWatcher setStartDateTimeTextWatcher()
@@ -336,6 +331,10 @@ public final class EditPostViewModel
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
                 byte[] bytes = byteArrayOutputStream.toByteArray();
+                if(countdownEventDto == null)
+                {
+                    countdownEventDto = new CountdownEventDto();
+                }
                 countdownEventDto.img = Base64.encodeToString(bytes, Base64.DEFAULT);
                 if(countdownEventDto.img == null)
                 {
