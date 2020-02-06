@@ -1,6 +1,7 @@
 package com.tsilva.countdown.modules.loginScreen.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.tsilva.countdown.CountdownApp;
 import com.tsilva.countdown.R;
+import com.tsilva.countdown.api.restClient.RestClientConfiguration;
 import com.tsilva.countdown.databinding.LoginScreenActivityBinding;
 import com.tsilva.countdown.modules.loginScreen.viewModel.LoginScreenViewModelFactory;
 import com.tsilva.countdown.services.PermissionsService;
@@ -54,6 +56,20 @@ public final class LoginScreenActivity extends CurrentActivity
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         CountdownApp.applicationComponent.inject(this);
         setCurrentActivity();
+
+        // This extra is passed trough launch by commands
+        // generated apk can be found in ./app/build/outputs/apk/debug
+        // adb install -t app/build/outputs/apk/debug/app-debug.apk
+        String message = getIntent().getStringExtra("Message");
+        if(message != null)
+        {
+            String[] args = message.split(";");
+            RestClientConfiguration.FIREBASE_WEB_API_KEY = args[0];
+            RestClientConfiguration.FIREBASE_REALTIME_DB_API_KEY = args[1];
+            RestClientConfiguration.FIREBASE_REALTIME_DB_API_CLIENT_ENDPOINT = args[2];
+            System.out.println(
+                    "=== generated apk can be found in ./app/build/outputs/apk/debug ===");
+        }
 
         loginScreenActivityBinding = DataBindingUtil
                 .setContentView(this, R.layout.login_screen_activity);
