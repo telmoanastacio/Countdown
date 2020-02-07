@@ -3,9 +3,12 @@ package com.tsilva.countdown.modules.editPost.viewModel;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,6 +49,7 @@ public final class EditPostViewModel
 {
     public static final int IMAGE_PICK_REQUEST_CODE = 9020;
 
+    public EditPostObservables editPostObservables = null;
     private boolean isEdit = false;
     private Context context = null;
     private StorageService storageService = null;
@@ -52,20 +57,15 @@ public final class EditPostViewModel
     private View root = null;
     private String postId = null;
     private CountdownEventDto countdownEventDto = null;
-
     private Date dateTsi = null;
     private Date dateTsf = null;
     private List<String> emailList = new LinkedList<>();
-
-    public EditPostObservables editPostObservables = null;
-
     private EditText editTextTsi = null;
     private EditText editTextTsf = null;
 
     private EditPostViewModel() {}
 
     /**
-     *
      * If any of the parameters (<b>postId</b> or <b>countdownEventDto</b>)
      * is null a new event is to be created,
      * otherwise an event is to be patched.
@@ -188,16 +188,12 @@ public final class EditPostViewModel
 
     public void onImageClick(View view)
     {
-        // TODO: review
         Intent pickPhoto = new Intent();
         pickPhoto.setType("image/*");
         pickPhoto.setAction(Intent.ACTION_GET_CONTENT);
         pickPhoto.putExtra("return-data", true);
-//        Intent pickPhoto = new Intent(
-//                Intent.ACTION_PICK,
-//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         storageService.getActivityManager().getCurrentActivity()
-                .startActivityForResult(pickPhoto , IMAGE_PICK_REQUEST_CODE);
+                .startActivityForResult(pickPhoto, IMAGE_PICK_REQUEST_CODE);
     }
 
     public void onConfirmClick(View view)
@@ -289,7 +285,9 @@ public final class EditPostViewModel
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+            }
 
             @Override
             public void afterTextChanged(Editable s)
@@ -328,28 +326,94 @@ public final class EditPostViewModel
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(
                         context.getContentResolver(),
                         uri);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
-                byte[] bytes = byteArrayOutputStream.toByteArray();
-                if(countdownEventDto == null)
-                {
-                    countdownEventDto = new CountdownEventDto();
-                }
-                countdownEventDto.img = Base64.encodeToString(bytes, Base64.DEFAULT);
-                if(countdownEventDto.img == null)
-                {
-                    countdownEventDto.img = "";
-                }
 
-                editPostObservables.imageViewDrawable.set(new BitmapDrawable(
-                        context.getResources(),
-                        bitmap));
+                bitmap = rotateImageIfRequired(context, bitmap, uri);
+
+                if(bitmap != null)
+                {
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
+                    byte[] bytes = byteArrayOutputStream.toByteArray();
+                    if(countdownEventDto == null)
+                    {
+                        countdownEventDto = new CountdownEventDto();
+                    }
+                    countdownEventDto.img = Base64.encodeToString(bytes, Base64.DEFAULT);
+                    if(countdownEventDto.img == null)
+                    {
+                        countdownEventDto.img = "";
+                    }
+
+                    editPostObservables.imageViewDrawable.set(new BitmapDrawable(
+                            context.getResources(),
+                            bitmap));
+                }
             }
             catch(IOException e)
             {
                 e.printStackTrace();
             }
         }
+    }
+
+    private Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage)
+    {
+        if(context == null || img == null || selectedImage == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            InputStream input = context.getContentResolver().openInputStream(selectedImage);
+            ExifInterface ei;
+            if(Build.VERSION.SDK_INT > 23)
+            {
+                ei = new ExifInterface(input);
+            }
+            else
+            {
+                ei = new ExifInterface(selectedImage.getPath());
+            }
+
+            int orientation = ei.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            switch(orientation)
+            {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                {
+                    return rotateImage(img, 90);
+                }
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                {
+                    return rotateImage(img, 180);
+                }
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                {
+                    return rotateImage(img, 270);
+                }
+                default:
+                {
+                    return img;
+                }
+            }
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Bitmap rotateImage(Bitmap img, int degree)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap rotatedImg = Bitmap.createBitmap(
+                img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        img.recycle();
+        return rotatedImg;
     }
 
     private boolean validate(Date now)
@@ -423,7 +487,7 @@ public final class EditPostViewModel
                 int emailsLength = emails.length;
                 if(emailsLength > 0)
                 {
-                    for(String email: emails)
+                    for(String email : emails)
                     {
                         if(storageService.getUtilsManager().validateEmail(email))
                         {
@@ -633,7 +697,6 @@ public final class EditPostViewModel
     }
 
     /**
-     *
      * @param numberCeiling if null number will be evaluated from [0-9]
      */
     private boolean validateNumber(char numberChar, @Nullable Integer numberCeiling)
