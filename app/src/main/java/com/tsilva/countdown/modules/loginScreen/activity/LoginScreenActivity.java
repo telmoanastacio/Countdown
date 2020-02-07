@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
+import com.tsilva.countdown.BuildConfig;
 import com.tsilva.countdown.CountdownApp;
 import com.tsilva.countdown.R;
 import com.tsilva.countdown.api.restClient.RestClientConfiguration;
@@ -56,19 +57,7 @@ public final class LoginScreenActivity extends CurrentActivity
         CountdownApp.applicationComponent.inject(this);
         setCurrentActivity();
 
-        // This extra is passed trough launch by commands
-        // generated apk can be found in ./app/build/outputs/apk/debug
-        // adb install -t app/build/outputs/apk/debug/app-debug.apk
-        String message = getIntent().getStringExtra("Message");
-        if(message != null)
-        {
-            String[] args = message.split(";");
-            RestClientConfiguration.FIREBASE_WEB_API_KEY = args[0];
-            RestClientConfiguration.FIREBASE_REALTIME_DB_API_KEY = args[1];
-            RestClientConfiguration.FIREBASE_REALTIME_DB_API_CLIENT_ENDPOINT = args[2];
-            System.out.println(
-                    "=== generated apk can be found in ./app/build/outputs/apk/debug ===");
-        }
+        getPrivateKeys();
 
         loginScreenActivityBinding = DataBindingUtil
                 .setContentView(this, R.layout.login_screen_activity);
@@ -128,6 +117,60 @@ public final class LoginScreenActivity extends CurrentActivity
                     return;
                 }
             }
+        }
+    }
+
+    /**
+     * If the app is generated containing a private key.
+     * It will work with a private database service.
+     */
+    private void getPrivateKeys()
+    {
+        String privateKey = persistenceService
+                .loadSerializableObject(context, String.class, "privateKey");
+        if(privateKey == null || privateKey.isEmpty())
+        {
+            // empty the filed after generating file with the private key
+            privateKey = "";
+
+            if(!privateKey.isEmpty())
+            {
+                persistenceService.saveSerializableObject(context, privateKey, "privateKey");
+            }
+        }
+
+        if(privateKey != null && !privateKey.isEmpty())
+        {
+            StringBuilder decodedKeySB = new StringBuilder();
+            decodedKeySB.append("");
+
+            String[] chars = privateKey.split("\\.");
+
+            for(String intChar : chars)
+            {
+                int character = Integer.valueOf(intChar);
+                decodedKeySB.append((char) character);
+            }
+
+            String[] keys = decodedKeySB.toString().split(";");
+
+            RestClientConfiguration.FIREBASE_WEB_API_KEY = keys[0];
+            RestClientConfiguration.FIREBASE_REALTIME_DB_API_KEY = keys[1];
+            RestClientConfiguration.FIREBASE_REALTIME_DB_API_CLIENT_ENDPOINT = keys[2];
+        }
+
+        // This extra is passed trough launch by commands
+        // generated apk can be found in ./app/build/outputs/apk/debug
+        // adb install -t app/build/outputs/apk/debug/app-debug.apk
+        String message = getIntent().getStringExtra("Message");
+        if(message != null)
+        {
+            String[] args = message.split(";");
+            RestClientConfiguration.FIREBASE_WEB_API_KEY = args[0];
+            RestClientConfiguration.FIREBASE_REALTIME_DB_API_KEY = args[1];
+            RestClientConfiguration.FIREBASE_REALTIME_DB_API_CLIENT_ENDPOINT = args[2];
+            System.out.println(
+                    "=== generated apk can be found in ./app/build/outputs/apk/debug ===");
         }
     }
 }

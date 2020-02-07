@@ -48,7 +48,10 @@ public final class ActivityManager
             this.currentActivityList = new LinkedList<>();
         }
 
-        this.currentActivityList.add(this.currentActivity);
+        if(!this.currentActivityList.contains(this.currentActivity))
+        {
+            this.currentActivityList.add(this.currentActivity);
+        }
     }
 
     public void backToLoginScreen()
