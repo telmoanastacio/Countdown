@@ -23,6 +23,7 @@ import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientPasswordR
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignIn;
 import com.tsilva.countdown.api.requests.post.PostFirebaseAuthApiClientSignUp;
 import com.tsilva.countdown.api.restClient.ResponseCallback;
+import com.tsilva.countdown.api.restClient.RestClientConfiguration;
 import com.tsilva.countdown.modules.loginScreen.activity.LoginScreenActivity;
 import com.tsilva.countdown.modules.optionsMenu.activity.OptionsMenuActivity;
 import com.tsilva.countdown.modules.postList.activity.PostListActivity;
@@ -95,6 +96,7 @@ public final class LoginScreenViewModel
         showView(ViewType.LOADING);
 
         // do things here
+        getPrivateKeys();
 
         showView(ViewType.CONTENT);
     }
@@ -142,6 +144,49 @@ public final class LoginScreenViewModel
         {
             fetchPasswordResetData(new PasswordResetRequestBodyDto(
                     userLoginCredentials.getEmail()));
+        }
+    }
+
+    /**
+     * If the app is generated containing a private key.
+     * It will work with a private database service.
+     */
+    public void getPrivateKeys()
+    {
+        String privateKey = persistenceService.loadKey();
+        if(privateKey == null || privateKey.isEmpty())
+        {
+            // empty the filed after generating file with the private key
+            privateKey = "";
+
+            if(!privateKey.isEmpty())
+            {
+                persistenceService.saveKey(context, privateKey);
+            }
+        }
+
+        if(privateKey != null && !privateKey.isEmpty())
+        {
+            String[] keys = privateKey.split(";");
+
+            RestClientConfiguration.FIREBASE_WEB_API_KEY = keys[0];
+            RestClientConfiguration.FIREBASE_REALTIME_DB_API_KEY = keys[1];
+            RestClientConfiguration.FIREBASE_REALTIME_DB_API_CLIENT_ENDPOINT = keys[2];
+        }
+
+        // This extra is passed trough launch by commands
+        // generated apk can be found in ./app/build/outputs/apk/debug
+        // adb install -t app/build/outputs/apk/debug/app-debug.apk
+        String message = storageService.getActivityManager().getCurrentActivity()
+                .getIntent().getStringExtra("Message");
+        if(message != null)
+        {
+            String[] args = message.split(";");
+            RestClientConfiguration.FIREBASE_WEB_API_KEY = args[0];
+            RestClientConfiguration.FIREBASE_REALTIME_DB_API_KEY = args[1];
+            RestClientConfiguration.FIREBASE_REALTIME_DB_API_CLIENT_ENDPOINT = args[2];
+            System.out.println(
+                    "=== generated apk can be found in ./app/build/outputs/apk/debug ===");
         }
     }
 

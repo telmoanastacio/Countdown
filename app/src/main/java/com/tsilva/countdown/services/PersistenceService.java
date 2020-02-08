@@ -3,6 +3,7 @@ package com.tsilva.countdown.services;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.util.Log;
 
 import com.tsilva.countdown.persistence.sharedPreferences.SharedPreferencesOperations;
@@ -27,6 +28,7 @@ public final class PersistenceService
 
     private SharedPreferencesOperations sharedPreferencesOperations = null;
     private String imageCacheDirPath = null;
+    private String keyDir = null;
 
     private PersistenceService() {}
 
@@ -35,6 +37,12 @@ public final class PersistenceService
         this.sharedPreferencesOperations = new SharedPreferencesOperations(context);
         this.imageCacheDirPath = context.getFilesDir().getPath()
                 + File.separator + "imageCache";
+        File dir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+        if(dir != null)
+        {
+            this.keyDir = dir.getPath()
+                    .replace("Android/data/com.tsilva.countdown/files/", "");
+        }
     }
 
     public static PersistenceService persistenceServiceInstance(Context context)
@@ -290,6 +298,146 @@ public final class PersistenceService
         }
     }
 
+    public void saveKey(Context context, String key)
+    {
+        File dir = new File(keyDir);
+        File keyFile = new File(dir.getPath() + File.separator + "key.dat");
+
+        if(!dir.exists())
+        {
+            dir.mkdirs();
+        }
+
+        if(!keyFile.exists())
+        {
+            try
+            {
+                keyFile.createNewFile();
+            }
+            catch(IOException e)
+            {
+                Log.e(TAG, "saveKey: couldn't create the file", e);
+            }
+        }
+
+        FileOutputStream fileOutputStream = null;
+        ObjectOutputStream objectOutputStream = null;
+        try
+        {
+            fileOutputStream = new FileOutputStream(keyFile);
+            objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            key = encodeKey(key);
+            objectOutputStream.writeObject(key);
+        }
+        catch(SecurityException e)
+        {
+            Log.e(TAG, "saveKey: security exception", e);
+        }
+        catch(FileNotFoundException e)
+        {
+            Log.e(TAG, "saveKey: couldn't save image", e);
+        }
+        catch(IOException e)
+        {
+            Log.e(TAG, "saveKey: couldn't save image", e);
+        }
+        finally
+        {
+            try
+            {
+                if(fileOutputStream != null)
+                {
+                    fileOutputStream.close();
+                }
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+            if(fileOutputStream != null)
+            {
+                try
+                {
+                    fileOutputStream.close();
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public String loadKey()
+    {
+        File dir = new File(keyDir);
+        File keyFile = new File(keyDir + File.separator + "key.dat");
+
+        if(dir.exists() && keyFile.exists())
+        {
+            FileInputStream fileInputStream = null;
+            ObjectInputStream objectInputStream = null;
+
+            try
+            {
+                fileInputStream = new FileInputStream(keyFile);
+                objectInputStream = new ObjectInputStream(fileInputStream);
+
+                String key = (String) objectInputStream.readObject();
+                key = decodeKey(key);
+
+                return key;
+            }
+            catch(SecurityException e)
+            {
+                Log.e(TAG, "loadKey: lack permissions", e);
+                return null;
+            }
+            catch(EOFException e)
+            {
+                Log.e(TAG, "loadKey: couldn't load key", e);
+                return null;
+            }
+            catch(IOException e)
+            {
+                Log.e(TAG, "loadKey: couldn't load key", e);
+                return null;
+            }
+            catch(ClassNotFoundException e)
+            {
+                Log.e(TAG, "loadKey: couldn't find key", e);
+                return null;
+            }
+            finally
+            {
+                if(objectInputStream != null)
+                {
+                    try
+                    {
+                        objectInputStream.close();
+                    }
+                    catch(IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                if(fileInputStream != null)
+                {
+                    try
+                    {
+                        fileInputStream.close();
+                    }
+                    catch(IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     public SharedPreferencesOperations getSharedPreferencesOperations()
     {
         return sharedPreferencesOperations;
@@ -297,4 +445,54 @@ public final class PersistenceService
 
     // private methods
     // ============================
+
+    /**
+     *
+     * @param key must be split by ;
+     */
+    private String encodeKey(String key)
+    {
+        if(key != null && !key.isEmpty())
+        {
+            byte[] bytes = key.getBytes();
+            StringBuilder sb = new StringBuilder();
+            sb.append("");
+
+            int character = -1;
+            for(int i = 0; i < bytes.length; i++)
+            {
+                character = bytes[i];
+                sb.append(character);
+                if(i != bytes.length - 1)
+                {
+                    sb.append('.');
+                }
+            }
+
+            return sb.toString();
+        }
+
+        return "";
+    }
+
+    private String decodeKey(String encodedKey)
+    {
+        if(encodedKey != null && !encodedKey.isEmpty())
+        {
+            StringBuilder decodedKeySB = new StringBuilder();
+            decodedKeySB.append("");
+
+            String[] chars = encodedKey.split("\\.");
+
+            for(String intChar : chars)
+            {
+                int character = Integer.valueOf(intChar);
+                decodedKeySB.append((char) character);
+            }
+
+            return decodedKeySB.toString();
+        }
+
+        return "";
+    }
 }
