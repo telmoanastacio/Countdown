@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
 
 public final class UtilsManager
 {
-    private static UtilsManager utilsManagerInstance = null;
-    private static boolean isInitialized = false;
+    private static volatile UtilsManager utilsManagerInstance = null;
+    private static volatile boolean isInitialized = false;
 
     private static final String VALID_EMAIL_ADDRESS_REGEX =
             "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
@@ -40,7 +40,13 @@ public final class UtilsManager
     {
         if(utilsManagerInstance == null)
         {
-            utilsManagerInstance = new UtilsManager();
+            synchronized(UtilsManager.class)
+            {
+                if(utilsManagerInstance == null)
+                {
+                    utilsManagerInstance = new UtilsManager();
+                }
+            }
         }
         return utilsManagerInstance;
     }

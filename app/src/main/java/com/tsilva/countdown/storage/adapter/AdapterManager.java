@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 public final class AdapterManager
 {
-    private static AdapterManager adapterManagerInstance = null;
+    private static volatile AdapterManager adapterManagerInstance = null;
 
     private PostListViewAdapter postListViewAdapter = null;
 
@@ -23,7 +23,13 @@ public final class AdapterManager
     {
         if(adapterManagerInstance == null)
         {
-            adapterManagerInstance = new AdapterManager();
+            synchronized(AdapterManager.class)
+            {
+                if(adapterManagerInstance == null)
+                {
+                    adapterManagerInstance = new AdapterManager();
+                }
+            }
         }
         return adapterManagerInstance;
     }

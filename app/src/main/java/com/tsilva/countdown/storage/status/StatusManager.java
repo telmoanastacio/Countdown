@@ -17,7 +17,7 @@ import java.util.Date;
 
 public final class StatusManager
 {
-    private static StatusManager statusManagerInstance = null;
+    private static volatile StatusManager statusManagerInstance = null;
     private static boolean isInitialized = false;
 
     private PersistenceService persistenceService = null;
@@ -29,7 +29,13 @@ public final class StatusManager
     {
         if(statusManagerInstance == null)
         {
-            statusManagerInstance = new StatusManager();
+            synchronized(StatusManager.class)
+            {
+                if(statusManagerInstance == null)
+                {
+                    statusManagerInstance = new StatusManager();
+                }
+            }
         }
         return statusManagerInstance;
     }

@@ -40,8 +40,9 @@ public final class PersistenceService
         File dir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
         if(dir != null)
         {
+            String basePackageName = context.getPackageName();
             this.keyDir = dir.getPath()
-                    .replace("Android/data/com.tsilva.countdown/files/", "");
+                    .replace("Android/data/" + basePackageName + "/files/", "");
         }
     }
 

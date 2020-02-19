@@ -17,8 +17,8 @@ import com.tsilva.countdown.storage.utils.UtilsManager;
 
 public final class StorageService
 {
-    private static StorageService storageServiceInstance = null;
-    private static boolean isInitialized = false;
+    private static volatile StorageService storageServiceInstance = null;
+    private static volatile boolean isInitialized = false;
 
     private PersistenceService persistenceService = null;
     private ActivityManager activityManager = null;
@@ -34,7 +34,13 @@ public final class StorageService
     {
         if(storageServiceInstance == null)
         {
-            storageServiceInstance = new StorageService();
+            synchronized(StorageService.class)
+            {
+                if(storageServiceInstance == null)
+                {
+                    storageServiceInstance = new StorageService();
+                }
+            }
         }
         return storageServiceInstance;
     }

@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class DialogManager
 {
-    private static DialogManager dialogManagerInstance = null;
+    private static volatile DialogManager dialogManagerInstance = null;
 
     private List<DialogFragment> dialogFragmentList = null;
 
@@ -26,7 +26,13 @@ public final class DialogManager
     {
         if(dialogManagerInstance == null)
         {
-            dialogManagerInstance = new DialogManager();
+            synchronized(DialogManager.class)
+            {
+                if(dialogManagerInstance == null)
+                {
+                    dialogManagerInstance = new DialogManager();
+                }
+            }
         }
         return dialogManagerInstance;
     }

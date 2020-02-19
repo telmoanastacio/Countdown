@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class ActivityManager
 {
-    private static ActivityManager activityManagerInstance = null;
+    private static volatile ActivityManager activityManagerInstance = null;
 
     private CurrentActivity currentActivity = null;
     private List<CurrentActivity> currentActivityList = null;
@@ -24,7 +24,13 @@ public final class ActivityManager
     {
         if(activityManagerInstance == null)
         {
-            activityManagerInstance = new ActivityManager();
+            synchronized(ActivityManager.class)
+            {
+                if(activityManagerInstance == null)
+                {
+                    activityManagerInstance = new ActivityManager();
+                }
+            }
         }
         return activityManagerInstance;
     }

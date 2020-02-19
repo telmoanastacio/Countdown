@@ -8,7 +8,7 @@ import com.tsilva.countdown.modules.postList.viewModel.PostListViewModel;
 
 public final class SharedViewModelManager
 {
-    private static SharedViewModelManager sharedViewModelManagerInstance = null;
+    private static volatile SharedViewModelManager sharedViewModelManagerInstance = null;
 
     private PostListViewModel postListViewModel = null;
 
@@ -18,7 +18,13 @@ public final class SharedViewModelManager
     {
         if(sharedViewModelManagerInstance == null)
         {
-            sharedViewModelManagerInstance = new SharedViewModelManager();
+            synchronized(SharedViewModelManager.class)
+            {
+                if(sharedViewModelManagerInstance == null)
+                {
+                    sharedViewModelManagerInstance = new SharedViewModelManager();
+                }
+            }
         }
         return sharedViewModelManagerInstance;
     }
